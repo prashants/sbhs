@@ -1,0 +1,7 @@
+WSGIScriptAlias / /home/cdeep/vlabs/vlabs_sbhs/apache/django.wsgi
+
+<Directory /home/cdeep/vlabs/vlabs_sbhs/apache>
+Order deny,allow
+Allow from all
+</Directory>
+
