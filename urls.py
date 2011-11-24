@@ -14,4 +14,8 @@ urlpatterns = patterns('',
 
     # Uncomment the next line to enable the admin:
     # (r'^admin/', include(admin.site.urls)),
+
+    # SBHS HARDWARE
+    (r'^sbhs/startexp', 'sbhshw.views.startexp'),
+    (r'^sbhs/endexp', 'sbhshw.views.endexp'),
 )
