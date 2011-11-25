@@ -2,6 +2,18 @@ from django.db import models
 
 # Create your models here.
 
+class Account(models.Model):
+    acc_id = models.IntegerField(primary_key=True)
+    rollno = models.CharField(max_length=30)
+    password = models.CharField(max_length=150)
+    emailid = models.CharField(max_length=300)
+    name = models.CharField(max_length=300)
+    mid = models.IntegerField()
+    regdate = models.CharField(max_length=30)
+    approved = models.CharField(max_length=45)
+    class Meta:
+        db_table = u'account'
+
 class SlotBooking(models.Model):
     slot_id = models.IntegerField(primary_key=True)
     rollno = models.CharField(max_length=30)
