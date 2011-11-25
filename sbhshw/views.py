@@ -50,7 +50,7 @@ def startexp(request):
         # if user and slot validated then set the session data
         if booking:
             booking = booking[0]
-            request.session['logged_in'] = True
+            request.session['logged_in'] = '1'
             request.session['slot_id'] = booking.slot_id
             request.session['rollno'] = booking.rollno
             request.session['slot_date'] = booking.slot_date
@@ -67,6 +67,7 @@ def startexp(request):
         clearsession(request)
         return HttpResponse("Please use the SBHS Client")
 
+@csrf_exempt
 def endexp(request):
     """ end experimentand reset board  """
     s = sbhs.Sbhs()
@@ -80,41 +81,103 @@ def endexp(request):
     html = json.dumps(['S', '1', 'Experiment over. Thank you for using the SBHS Project'])
     return HttpResponse(html)
 
-def readsbhs(request):
+@csrf_exempt
+def communicate(request):
     """ read data from sbhs """
+    # check if user is logged in
+    if not request.session.get('logged_in', None):
+        clearsession(request)
+        html = json.dumps(['S', '0', 'Please login before reading data from SBHS'])
+        return HttpResponse(html)
+
+    # server packet received timestamp
+    server_start_time = datetime.datetime.now()
+    server_start_ts = server_start_time.strftime("%Y:%m:%d-%H:%M:%S-") + str(server_start_time.microsecond/1000) # converting microsecond to millisecond
+
+    # connect to SBHS
     s = sbhs.Sbhs()
-    s.connect(request.session['mid'])
-    temprature = s.getTemp()
+    res = s.connect(request.session.get('mid', None))
+    if not res:
+        html = json.dumps(['S', '0', 'Cannot connect to SBHS'])
+        return HttpResponse(html)
+
+    # get scilab client iteration
+    scilab_client_iteration = request.POST.get('iteration', None)
+    if not scilab_client_iteration:
+        s.disconnect()
+        html = json.dumps(['S', '0', 'Invalid scilab client iteration number'])
+        return HttpResponse(html)
+
+    # get scilab client timestamp
+    scilab_client_timestamp = request.POST.get('timestamp', None)
+    if not scilab_client_timestamp:
+        s.disconnect()
+        html = json.dumps(['S', '0', 'Invalid scilab client timestamp'])
+        return HttpResponse(html)
+
+    # set heat value
+    err = False
+    scilab_client_heat = request.POST.get('heat', None)
+    if scilab_client_heat:
+        try:
+            heat = int(scilab_client_heat)
+        except:
+            err = True
+            errMsg = 'Invalid heat value'
+        # write heat value to SBHS
+        if not s.setHeat(heat):
+            err = True
+            errMsg = 'Error writing heat value to SBHS'
+    else:
+        err = True
+        errMsg = 'Please specify heat value'
+    # check for error message when setting heat
+    if err:
+        s.disconnect()
+        html = json.dumps(['S', '0', errMsg])
+        return HttpResponse(html)
+
+    # set fan value
+    err = False
+    scilab_client_fan = request.POST.get('fan', None)
+    if scilab_client_fan:
+        try:
+            fan = int(scilab_client_fan)
+        except:
+            err = True
+            errMsg = 'Invalid fan value'
+        # write fan value to SBHS
+        if not s.setFan(fan):
+            err = True
+            errMsg = 'Error writing fan value to SBHS'
+    else:
+        s.disconnect()
+        err = True
+        errMsg = 'Please specify fan value'
+    # check for error message when setting fan
+    if err:
+        s.disconnect()
+        html = json.dumps(['S', '0', errMsg])
+        return HttpResponse(html)
+
+    # read current temperature
+    temperature = s.getTemp()
+    if temperature < 1.0:
+        s.disconnect()
+        html = json.dumps(['S', '0', 'Invalid temperature value'])
+        return HttpResponse(html)
+
+    # all SBHS read and write completed
     s.disconnect()
 
-    server_time = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
-    client_time = datetime.datetime.now().strftime("%Y%m%d%H%M%S")
+    # server packet send timestamp
+    server_end_time = datetime.datetime.now()
+    server_end_ts = server_end_time.strftime("%Y:%m:%d-%H:%M:%S-") + str(server_end_time.microsecond/1000) # converting microsecond to millisecond
+
     # return data to user
-    html = "%d %s %s %2.2f\n" % (1111, server_time, client_time, temprature)
+    server_data = "%s %s %s %s %2.2f %s %s\n" % (scilab_client_iteration, scilab_client_timestamp, scilab_client_heat, scilab_client_fan, temperature, server_start_ts, server_end_ts)
+    html = json.dumps(['S', '1', server_data])
     return HttpResponse(html)
-
-def writesbhs(request):
-	""" write data to sbhs """
-	s = sbhs.Sbhs()
-	s.connect(request.session['mid'])
-	err = False
-
-	if request.POST['heat']:
-		heat = int(request.POST['heat'])
-		if not s.setHeat(heat):
-			err = True
-
-	if request.POST['fan']:
-		fan = int(request.POST['fan'])
-		if not s.setFan(fan):
-			err = True
-
-	s.disconnect()
-	if err:
-		html = "ERROR"
-	else:
-		html = "OK"
-	return HttpResponse(html)
 
 def clearsession(request):
     if request.session.get('logged_in', None):

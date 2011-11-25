@@ -18,4 +18,5 @@ urlpatterns = patterns('',
     # SBHS HARDWARE
     (r'^sbhs/startexp', 'sbhshw.views.startexp'),
     (r'^sbhs/endexp', 'sbhshw.views.endexp'),
+    (r'^sbhs/communicate', 'sbhshw.views.communicate'),
 )
