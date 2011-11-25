@@ -5,6 +5,7 @@ import sbhs
 import hashlib
 import json
 import datetime
+import time
 
 from sbhshw.models import SlotBooking, Account
 
@@ -91,9 +92,8 @@ def communicate(request):
         html = json.dumps(['S', '0', 'Please login before reading data from SBHS'])
         return HttpResponse(html)
 
-    # server packet received timestamp
-    server_start_time = datetime.datetime.now()
-    server_start_ts = server_start_time.strftime("%Y:%m:%d-%H:%M:%S-") + str(server_start_time.microsecond/1000) # converting microsecond to millisecond
+    # server packet received timestamp in UNIX EPOCH millisecond 
+    server_start_ts = int(time.time() * 1000)
 
     # connect to SBHS
     s = sbhs.Sbhs()
@@ -172,11 +172,10 @@ def communicate(request):
     s.disconnect()
 
     # server packet send timestamp
-    server_end_time = datetime.datetime.now()
-    server_end_ts = server_end_time.strftime("%Y:%m:%d-%H:%M:%S-") + str(server_end_time.microsecond/1000) # converting microsecond to millisecond
+    server_end_ts = int(time.time() * 1000)
 
     # return data to user
-    server_data = "%s %s %s %s %2.2f %s %s\n" % (scilab_client_iteration, scilab_client_timestamp, scilab_client_heat, scilab_client_fan, temperature, server_start_ts, server_end_ts)
+    server_data = "%s %s %s %s %2.2f %d %d" % (scilab_client_iteration, scilab_client_timestamp, scilab_client_heat, scilab_client_fan, temperature, server_start_ts, server_end_ts)
     html = json.dumps(['S', '1', server_data])
     return HttpResponse(html)
 

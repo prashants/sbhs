@@ -15,18 +15,22 @@ print content
 url = "http://10.102.152.29/sbhs/communicate"
 data = urllib.urlencode({
     'iteration' : '1',
-    'timestamp' : '1',
-    'heat' : '30',
+    'timestamp' : '0001',
+    'heat' : '35',
     'fan' : '90',
 })
+#try:
 req = urllib2.Request(url)
 fd = urllib2.urlopen(req, data)
 content = fd.read()
 print content
 
-url = "http://10.102.152.29/sbhs/endexp"
-req = urllib2.Request(url)
-fd = urllib2.urlopen(req)
-content = fd.read()
-print content
+#except:
+#print "cannot communicate with device"
+
+#url = "http://10.102.152.29/sbhs/endexp"
+#req = urllib2.Request(url)
+#fd = urllib2.urlopen(req)
+#content = fd.read()
+#print content
 
