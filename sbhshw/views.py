@@ -72,9 +72,10 @@ def endexp(request):
     """ end experimentand reset board  """
     s = sbhs.Sbhs()
     if request.session.get('mid', None): 
-        s.connect(request.session['mid'])
-        s.reset_board()
-        s.disconnect()
+        res = s.connect(request.session.get('mid', None))
+        if res:
+            s.reset_board()
+            s.disconnect()
 
     # delete user session data
     clearsession(request)

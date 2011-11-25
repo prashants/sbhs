@@ -1,4 +1,5 @@
 import serial
+import os
 
 INCOMING_HEAT = 254
 INCOMING_FAN  = 253
@@ -18,9 +19,14 @@ class Sbhs:
 
 	def connect(self, boardnum):
 		""" Open a serial connection via USB to the SBHS """
+		self.boardnum = boardnum
+		# check if SBHS device is connected
+		boardfile = '/dev/ttyUSB' + str(self.boardnum)
+		if not os.path.exists(boardfile):
+			print 'SBHS device file ' + boardfile + ' does not exists'
+			return False
 		try:
-			self.boardnum = boardnum
-			self.boardcon = serial.Serial('/dev/ttyUSB' + str(boardnum), 9600)
+			self.boardcon = serial.Serial(boardfile, 9600)
 			self.boardcon.timeout = 10 # setting read timeout to 10 seconds
 			self.status = 1
 			return True

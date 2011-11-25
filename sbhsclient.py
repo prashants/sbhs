@@ -1,4 +1,9 @@
-import urllib2, urllib
+import urllib2, urllib, cookielib
+
+# cookie handling
+c = cookielib.CookieJar()
+o = urllib2.build_opener(urllib2.HTTPCookieProcessor(c))
+urllib2.install_opener(o)
 
 url = "http://10.102.152.29/sbhs/startexp"
 data = urllib.urlencode({'rollno' : '111', 'password' : '11111'})
