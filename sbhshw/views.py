@@ -6,6 +6,7 @@ import hashlib
 import json
 import datetime
 import time
+import os
 
 from sbhshw.models import SlotBooking, Account
 
@@ -15,6 +16,8 @@ from django.views.decorators.csrf import csrf_exempt
 # 1: STATUS / DATA : S/D
 # 2: SUCCESS / FAILED : 1/0
 # 3: MESSAGE : MESSAGE STRING
+
+log_file_path = "/home/cdeep/LOG/"
 
 @csrf_exempt
 def startexp(request):
@@ -48,6 +51,29 @@ def startexp(request):
             time = cur_dt.hour,                         # current hour
         )
 
+        # set the log file
+        log_file_name = str(int(time.time() * 1000)) + ".txt"
+        # check if user folder exists
+        log_file_folder = log_file_path + rollno + "/"
+        if not os.path.exists(log_file_folder):
+            try:
+                os.makedirs(log_file_folder)
+            except:
+                clearsession(request)
+                html = json.dumps(['S', '0', 'Failed to create user folder'])
+                return HttpResponse(html)
+        if os.path.isfile(log_file_folder + log_file_name):
+            clearsession(request)
+            html = json.dumps(['S', '0', 'Log file already exists'])
+            return HttpResponse(html)
+        try:
+            lf = open(log_file_folder + log_file_name, "w")
+            lf.close()
+        except:
+            clearsession(request)
+            html = json.dumps(['S', '0', 'Failed to create log file'])
+            return HttpResponse(html)
+
         # if user and slot validated then set the session data
         if booking:
             booking = booking[0]
@@ -58,7 +84,8 @@ def startexp(request):
             request.session['start_time'] = booking.start_time
             request.session['end_time'] = booking.end_time
             request.session['mid'] = booking.mid
-            html = json.dumps(['S', '1', 'Login Successfull and slot found'])
+            request.session['log_file'] = log_file_folder + log_file_name
+            html = json.dumps(['S', '1', 'Login Successful and slot found', log_file_name])
             return HttpResponse(html)
         else:
             clearsession(request)
@@ -176,7 +203,22 @@ def communicate(request):
 
     # return data to user
     server_data = "%s %s %s %s %2.2f %d %d" % (scilab_client_iteration, scilab_client_timestamp, scilab_client_heat, scilab_client_fan, temperature, server_start_ts, server_end_ts)
-    html = json.dumps(['S', '1', server_data])
+
+    # write to log file
+    log_file = request.session.get('log_file', None)
+    if not log_file:
+        s.disconnect()
+        html = json.dumps(['S', '0', 'Log file not found'])
+        return HttpResponse(html)
+    try:
+        lf = open(log_file, "a")
+        lf.write(server_data + '\n')
+        lf.close()
+    except:
+        html = json.dumps(['S', '0', "Error writing to server log file"])
+        return HttpResponse(html)
+
+    html = json.dumps(['D', '1', server_data])
     return HttpResponse(html)
 
 def clearsession(request):

@@ -1,4 +1,5 @@
 import urllib2, urllib, cookielib
+import time
 
 # cookie handling
 c = cookielib.CookieJar()
@@ -12,19 +13,22 @@ fd = urllib2.urlopen(req, data)
 content = fd.read()
 print content
 
-url = "http://10.102.152.29/sbhs/communicate"
-data = urllib.urlencode({
-    'iteration' : '1',
-    'timestamp' : '0001',
-    'heat' : '35',
-    'fan' : '90',
-})
+iter = 1
+for x in range(10):
+    ts = int(time.time() * 1000)
+    iter = iter + 1
+    url = "http://10.102.152.29/sbhs/communicate"
+    data = urllib.urlencode({
+        'iteration' : iter,
+        'timestamp' : ts,
+        'heat' : '1',
+        'fan' : '150',
+    })
 #try:
-req = urllib2.Request(url)
-fd = urllib2.urlopen(req, data)
-content = fd.read()
-print content
-
+    req = urllib2.Request(url)
+    fd = urllib2.urlopen(req, data)
+    content = fd.read()
+    print content
 #except:
 #print "cannot communicate with device"
 
