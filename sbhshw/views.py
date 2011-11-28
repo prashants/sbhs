@@ -51,7 +51,8 @@ def startexp(request):
             time = cur_dt.hour,                         # current hour
         )
 
-        # set the log file
+        # set the log file name and create the necessary folders
+        # log file name format : LOG_FILE_BASE_PATH + ROLLNO + TIMESTAMP.txt
         log_file_name = str(int(time.time() * 1000)) + ".txt"
         # check if user folder exists
         log_file_folder = log_file_path + rollno + "/"
@@ -62,6 +63,7 @@ def startexp(request):
                 clearsession(request)
                 html = json.dumps(['S', '0', 'Failed to create user folder'])
                 return HttpResponse(html)
+        # check if file exists and try to write to it
         if os.path.isfile(log_file_folder + log_file_name):
             clearsession(request)
             html = json.dumps(['S', '0', 'Log file already exists'])
@@ -198,7 +200,7 @@ def communicate(request):
     # all SBHS read and write completed
     s.disconnect()
 
-    # server packet send timestamp
+    # server processing end timestamp
     server_end_ts = int(time.time() * 1000)
 
     # return data to user
@@ -207,7 +209,7 @@ def communicate(request):
     # write to log file
     log_file = request.session.get('log_file', None)
     if not log_file:
-        s.disconnect()
+        clearsession()
         html = json.dumps(['S', '0', 'Log file not found'])
         return HttpResponse(html)
     try:
@@ -215,6 +217,7 @@ def communicate(request):
         lf.write(server_data + '\n')
         lf.close()
     except:
+        clearsession()
         html = json.dumps(['S', '0', "Error writing to server log file"])
         return HttpResponse(html)
 
@@ -222,6 +225,7 @@ def communicate(request):
     return HttpResponse(html)
 
 def clearsession(request):
+    """ clear the user session data """
     if request.session.get('logged_in', None):
         del request.session['logged_in']
     if request.session.get('slot_id', None):
@@ -236,3 +240,5 @@ def clearsession(request):
         del request.session['end_time']
     if request.session.get('mid', None):
         del request.session['mid']
+    if request.session.get('log_file', None):
+        del request.session['log_file']
