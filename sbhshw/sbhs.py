@@ -19,6 +19,7 @@ class Sbhs:
 
 	def connect(self, boardnum):
 		""" Open a serial connection via USB to the SBHS """
+        # check for valid board number
 		try:
 			self.boardnum = int(boardnum)
 		except:

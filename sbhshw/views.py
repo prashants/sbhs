@@ -114,7 +114,11 @@ def endexp(request):
 
 @csrf_exempt
 def communicate(request):
-    """ read data from sbhs """
+    """ read and write data from sbhs """
+    if request.method != "POST":
+        html = json.dumps(['S', '0', 'Please use the SBHS Client'])
+        return HttpResponse(html)
+
     # check if user is logged in
     if not request.session.get('logged_in', None):
         clearsession(request)
