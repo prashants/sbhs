@@ -19,15 +19,18 @@ class Sbhs:
 
 	def connect(self, boardnum):
 		""" Open a serial connection via USB to the SBHS """
-		self.boardnum = boardnum
+		try:
+			self.boardnum = int(boardnum)
+		except:
+			print 'Invalid board number'
+			return False
 		# check if SBHS device is connected
 		boardfile = '/dev/ttyUSB' + str(self.boardnum)
 		if not os.path.exists(boardfile):
 			print 'SBHS device file ' + boardfile + ' does not exists'
 			return False
 		try:
-			self.boardcon = serial.Serial(boardfile, 9600)
-			self.boardcon.timeout = 10 # setting read timeout to 10 seconds
+			self.boardcon = serial.Serial(port=boardfile, baudrate=9600, bytesize=8, parity='N', stopbits=1, timeout=2)
 			self.status = 1
 			return True
 		except:
