@@ -19,6 +19,10 @@ from django.views.decorators.csrf import csrf_exempt
 
 log_file_path = "/home/cdeep/LOG/"
 
+def checkconnection(request):
+    """ test connection """
+    return HttpResponse("TESTOK")
+
 @csrf_exempt
 def startexp(request):
     """ start experiment for authenticated users """
