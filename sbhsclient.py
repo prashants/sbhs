@@ -14,8 +14,8 @@ useProxy = False
 proxyURL = ''
 base_url = 'http://10.102.152.29/django/sbhs/'
 cur_log_file = ''
-scilabreadfname = 'scilabread.sci'
-scilabwritefname = 'scilabwrite.sci'
+scilabreadfname = 'scilabread.sce'
+scilabwritefname = 'scilabwrite.sce'
 exp_time = ''
 max_retry = 20
 
