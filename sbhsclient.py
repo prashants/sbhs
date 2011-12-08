@@ -10,8 +10,17 @@ import os
 ################## USER PARAMETERS ######################
 
 rollno = '111'
-useProxy = False
-proxyURL = ''
+
+useProxy = 1
+proxy_info = {
+    'user' : 'prashantsh',
+    'pass' : 'asdf1234$',
+    'host' : 'netmon.iitb.ac.in',
+    'port' : 80 # or 8080 or whatever
+}
+
+################## SYSTEM SETTINGS ######################
+
 base_url = 'http://10.102.152.29/django/sbhs/'
 cur_log_file = ''
 scilabreadfname = 'scilabread.sce'
@@ -19,10 +28,25 @@ scilabwritefname = 'scilabwrite.sce'
 exp_time = ''
 max_retry = 20
 
+################## GLOBAL VARIABLES ####################
+scilabreadf = ''
+scilabwritef = ''
+logf = ''
+
+################### MAIN CODE ############################
+
+# proxy handling
+if useProxy:
+    # build a new opener that uses a proxy requiring authorization
+    proxy_support = urllib2.ProxyHandler({"http" : "http://%(user)s:%(pass)s@%(host)s:%(port)d" % proxy_info})
+    opener = urllib2.build_opener(proxy_support, urllib2.HTTPHandler)
+    # install it
+    urllib2.install_opener(opener)
+
 # cookie handling
-c = cookielib.CookieJar()
-o = urllib2.build_opener(urllib2.HTTPCookieProcessor(c))
-urllib2.install_opener(o)
+cookie_support = cookielib.CookieJar()
+opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie_support))
+urllib2.install_opener(opener)
 
 def checkconnection():
     """ test connection to server """
@@ -67,7 +91,7 @@ def authenticate():
         cur_log_file = content[3]
 
     # get the experiment timeout in minutes from user
-    exp_time = raw_input('How many minutes do you want to run the experiment (eg: enter 60 for 60 minutes)? ')
+    exp_time = raw_input('How many minutes do you want to run the experiment? ')
     try:
         exp_time = int(exp_time)
     except:
@@ -105,6 +129,8 @@ def initlogfiles():
 def startexperiment():
     """ start the experiment """
     global cur_log_file, exp_time, max_retry
+    global scilabreadf, scilabwritef, logf
+
     # setup the experiment timer
     exp_start = int(time())
     # open the log files
@@ -118,56 +144,71 @@ def startexperiment():
 
     print 'Experiment has started. Please start your Scilab client'
 
-    while True:
-        # check for experiment timeout
-        exp_time_diff = int(time()) - exp_start 
-        if exp_time_diff > exp_time:
-            print 'Experiment completed. Experiment timeout reached'
-            return True
-
-        # read data from file that scilab writes to
-        scilabwritestr = scilabwritef.readline()
-        if scilabwritestr:
-            print 'Read...', scilabwritestr
-            scilabwritedata = scilabwritestr.split()
-            cur_iter = int(scilabwritedata[0])
-            cur_time = int(scilabwritedata[1])
-            cur_heat = int(scilabwritedata[2])
-            cur_fan = int(scilabwritedata[3])
-        else:
-            continue
-
-        # read data from server
-        srv_data = False
-        retry_counter = 0
-        while not srv_data:
+    try:
+        while True:
             # check for experiment timeout
             exp_time_diff = int(time()) - exp_start 
             if exp_time_diff > exp_time:
                 print 'Experiment completed. Experiment timeout reached'
                 return True
-            # check for maximum server connection retry attempts
-            if retry_counter > max_retry:
-                print 'Maximum connection retry reached'
-                return False
-            try:
-                url_com = base_url + 'communicate'
-                postdata = urllib.urlencode({'iteration' : cur_iter, 'timestamp' : cur_time, 'heat' : cur_heat, 'fan' : cur_fan})
-                req = urllib2.Request(url_com)
-                res = urllib2.urlopen(req, postdata)
-                content = res.read()
-                srv_data = True
-                print content
-                # write data to file
-                scilabreadf.write(content + '\n')
-                scilabreadf.flush()
-                # write data to log
-                logf.write(content + '\n')
-                logf.flush()
-            except:
-                print 'Failed to connect to server...retrying'
-                retry_counter = retry_counter + 1
-                srv_data = False
+
+            # read data from file that scilab writes to
+            scilabwritestr = scilabwritef.readline()
+            if scilabwritestr:
+                print '\nRead...', scilabwritestr
+                scilabwritedata = scilabwritestr.split()
+                cur_iter = int(scilabwritedata[0])
+                cur_time = int(scilabwritedata[1])
+                cur_heat = int(scilabwritedata[2])
+                cur_fan = int(scilabwritedata[3])
+            else:
+                continue
+
+            # read data from server
+            srv_data = False
+            retry_counter = 0
+            while not srv_data:
+                # check for experiment timeout
+                exp_time_diff = int(time()) - exp_start 
+                if exp_time_diff > exp_time:
+                    print 'Experiment completed. Experiment timeout reached'
+                    return True
+                # check for maximum server connection retry attempts
+                if retry_counter > max_retry:
+                    print 'Maximum connection retry reached'
+                    return False
+                try:
+                    url_com = base_url + 'communicate'
+                    postdata = urllib.urlencode({'iteration' : cur_iter, 'timestamp' : cur_time, 'heat' : cur_heat, 'fan' : cur_fan})
+                    req = urllib2.Request(url_com)
+                    res = urllib2.urlopen(req, postdata)
+                    content = res.read()
+                    srv_data = True
+                    content = json.loads(content)
+                    # check if content is received properly
+                    if content[0] == 'D':
+                        if content[1] == '1':
+                            print content[2]
+                            # write data to file
+                            scilabreadf.write(content[2] + '\n')
+                            scilabreadf.flush()
+                            # write data to log
+                            logf.write(content[2] + '\n')
+                            logf.flush()
+                        else:
+                            print 'Error fetching data from server:', content[2]
+                    else:
+                        if content[1] == '1':
+                            print 'Received status message from server:', content[2]
+                        else:
+                            print 'Error fetching response from server:', content[2]
+                except:
+                    print 'Failed to connect to server...retrying'
+                    retry_counter = retry_counter + 1
+                    srv_data = False
+    except KeyboardInterrupt:
+        print '\nExperiment terminated...'
+        return False
 
 ######################## START EXPERIMENT ###########################
 
@@ -187,7 +228,18 @@ if not initlogfiles():
     sys.exit()
 
 # start the experiment
-startexperiment()
+if not startexperiment():
+    scilabwritef.close()
+    scilabreadf.flush()
+    scilabreadf.close()
+    logf.flush()
+    logf.close()
+else:
+    scilabwritef.close()
+    scilabreadf.flush()
+    scilabreadf.close()
+    logf.flush()
+    logf.close()
 
+print 'Thank you for using the SBHS Virtual Labs project'
 sys.exit()
-
