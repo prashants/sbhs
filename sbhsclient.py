@@ -1,3 +1,5 @@
+#!/usr/bin/python
+
 import urllib2, urllib, cookielib
 from time import time
 import sys
