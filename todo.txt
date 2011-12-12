@@ -1,0 +1,8 @@
+- data file format
+- better log file name
+- sbhs query and mapping of machine id
+- get time from start / end time database column
+- documentation
+- scilab file read / write on client simultaneously
+- variable number of arguments
+
