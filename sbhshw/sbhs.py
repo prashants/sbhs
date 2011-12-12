@@ -5,8 +5,8 @@ INCOMING_HEAT = 254
 INCOMING_FAN  = 253
 OUTGOING_TEMP = 255
 
-MAX_HEAT = 50
-MAX_FAN = 200
+MAX_HEAT = 40
+MAX_FAN = 251
 
 class Sbhs:
     """ This is the Single Board Heater System class """

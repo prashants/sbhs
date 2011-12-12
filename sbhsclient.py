@@ -144,6 +144,7 @@ def startexperiment():
 
     print 'Experiment has started. Please start your Scilab client'
 
+    # catch if Ctrl+C key is pressed by user and terminate the experiment
     try:
         while True:
             # check for experiment timeout
@@ -157,10 +158,11 @@ def startexperiment():
             if scilabwritestr:
                 print '\nRead...', scilabwritestr
                 scilabwritedata = scilabwritestr.split()
-                cur_iter = int(scilabwritedata[0])
-                cur_time = int(scilabwritedata[1])
-                cur_heat = int(scilabwritedata[2])
-                cur_fan = int(scilabwritedata[3])
+                cur_iter = int(float(scilabwritedata[0]))
+                cur_time = int(float(scilabwritedata[1]))
+                cur_heat = int(float(scilabwritedata[2]))
+                cur_fan = int(float(scilabwritedata[3]))
+                print "data send %d, %d, %d, %d" % (cur_iter, cur_time, cur_heat, cur_fan)
             else:
                 continue
 
