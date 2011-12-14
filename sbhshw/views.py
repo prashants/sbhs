@@ -57,7 +57,7 @@ def startexp(request):
 
         # set the log file name and create the necessary folders
         # log file name format : LOG_FILE_BASE_PATH + ROLLNO + TIMESTAMP.txt
-        log_file_name = str(int(time.time() * 1000)) + ".txt"
+        log_file_name = datetime.datetime.now().strftime('%d%b%Y_%H_%M_%S') + ".txt"
         # check if user folder exists
         log_file_folder = log_file_path + rollno + "/"
         if not os.path.exists(log_file_folder):

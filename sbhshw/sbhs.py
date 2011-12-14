@@ -1,8 +1,9 @@
 import serial
 import os
 
-INCOMING_HEAT = 254
+OUTGOING_MACHINE_ID  = 252
 INCOMING_FAN  = 253
+INCOMING_HEAT = 254
 OUTGOING_TEMP = 255
 
 MAX_HEAT = 40
@@ -78,6 +79,17 @@ class Sbhs:
         except:
             print "Error: cannot read temprature from board %d" % self.boardnum
         return  0.0
+
+    def getMachineId(self):
+        """ Get machine id from the device """
+        try:
+            self.boardcon.flushInput()
+            self._write(chr(OUTGOING_MACHINE_ID))
+            machine_id = ord(self._read(1))
+            return machine_id
+        except:
+            print "Error: cannot read machine id from board %d" % self.boardnum
+        return -1
 
     def disconnect(self):
         """ Reset the board fan and heat values and close the USB connection """
