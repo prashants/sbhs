@@ -1,10 +1,10 @@
 import os, sys
+
 apache_configuration= os.path.dirname(__file__)
 project = os.path.dirname(apache_configuration)
 workspace = os.path.dirname(project)
-sys.path.append(workspace) 
+sys.path.append(workspace)
 
-sys.path.append('/home/cdeep/vlabs')
 sys.path.append('/home/cdeep/vlabs/vlabs_sbhs')
 sys.path.append('/home/cdeep/vlabs/sbhshw')
 
