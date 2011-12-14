@@ -90,17 +90,6 @@ def authenticate():
         print content[2]
         cur_log_file = content[3]
 
-    # get the experiment timeout in minutes from user
-    exp_time = raw_input('How many minutes do you want to run the experiment? ')
-    try:
-        exp_time = int(exp_time)
-    except:
-        print 'Please enter a valid time in minutes'
-        return False
-    if exp_time < 0 or exp_time > 60:
-        print 'Experiment time cannot be less than 0 or more than 60 minutes'
-        return False
-    exp_time = exp_time * 60 # converting experiment time into seconds
     return True
 
 def initlogfiles():
@@ -131,8 +120,6 @@ def startexperiment():
     global cur_log_file, exp_time, max_retry
     global scilabreadf, scilabwritef, logf
 
-    # setup the experiment timer
-    exp_start = int(time())
     # open the log files
     try:
         scilabreadf = file(scilabreadfname, 'w')
@@ -147,12 +134,6 @@ def startexperiment():
     # catch if Ctrl+C key is pressed by user and terminate the experiment
     try:
         while True:
-            # check for experiment timeout
-            exp_time_diff = int(time()) - exp_start 
-            if exp_time_diff > exp_time:
-                print 'Experiment completed. Experiment timeout reached'
-                return True
-
             # read data from file that scilab writes to
             scilabwritestr = scilabwritef.readline()
             if scilabwritestr:
@@ -170,11 +151,6 @@ def startexperiment():
             srv_data = False
             retry_counter = 0
             while not srv_data:
-                # check for experiment timeout
-                exp_time_diff = int(time()) - exp_start 
-                if exp_time_diff > exp_time:
-                    print 'Experiment completed. Experiment timeout reached'
-                    return True
                 # check for maximum server connection retry attempts
                 if retry_counter > max_retry:
                     print 'Maximum connection retry reached'
