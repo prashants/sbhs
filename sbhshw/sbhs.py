@@ -18,26 +18,46 @@ class Sbhs:
         # 1 = connected
         self.status = 0
 
-    def connect(self, boardnum):
+    def connect(self, machine_id):
         """ Open a serial connection via USB to the SBHS """
-        # check for valid board number
+        # check for valid machine id number
         try:
-            self.boardnum = int(boardnum)
+            self.machine_id = int(machine_id)
         except:
-            print 'Invalid board number'
+            print 'Invalid machine id specified'
             return False
+
+        # get the usb device file from the machine map file
+        try:
+            map_file = open('map_machine_ids.txt', 'r')
+            usb_device_file = False
+            for mapping_str in map_file.readlines():
+                mapping = mapping_str.split('=')
+                # if mapping for the machine id found set the usb device file and break out of loop
+                if mapping[0] == str(self.machine_id):
+                    usb_device_file = mapping[1].strip()
+                    break
+            # reached end of file and check if machine id entry is present in the machine map file
+            map_file.close()
+            if not usb_device_file:
+                print 'Error: cannot locate the USB device in the the map table for machine id %d' % self.machine_id
+                return False
+        except:
+            map_file.close()
+            print 'Error: cannot get the USB device path for the machine id %d' % self.machine_id
+            return False
+
         # check if SBHS device is connected
-        boardfile = '/dev/ttyUSB' + str(self.boardnum)
-        if not os.path.exists(boardfile):
-            print 'SBHS device file ' + boardfile + ' does not exists'
+        if not os.path.exists(usb_device_file):
+            print 'SBHS device file ' + usb_device_file + ' does not exists'
             return False
         try:
-            self.boardcon = serial.Serial(port=boardfile, baudrate=9600, bytesize=8, parity='N', stopbits=1, timeout=2)
+            self.boardcon = serial.Serial(port=usb_device_file, baudrate=9600, bytesize=8, parity='N', stopbits=1, timeout=2)
             self.status = 1
             return True
         except:
-            print "Error: cannot connect to board %d" % boardnum
-            self.boardnum = 0
+            print "Error: cannot connect to machine id %d" % machine_id
+            self.machine_id = 0
             self.boardcon = False
             self.status = 0
         return False
@@ -53,7 +73,7 @@ class Sbhs:
             self._write(chr(val))
             return True
         except:
-            return "Error: cannot set heat for board %d" % self.boardnum
+            return "Error: cannot set heat for machine id %d" % self.machine_id
             return False
 
     def setFan(self, val):
@@ -66,7 +86,7 @@ class Sbhs:
             self._write(chr(val))
             return True
         except:
-            return "Error: cannot set fan for board %d" % self.boardnum
+            return "Error: cannot set fan for machine id %d" % self.machine_id
             return False
 
     def getTemp(self):
@@ -77,7 +97,7 @@ class Sbhs:
             temp = ord(self._read(1)) + (0.1 * ord(self._read(1)))
             return temp
         except:
-            print "Error: cannot read temprature from board %d" % self.boardnum
+            print "Error: cannot read temprature from machine id %d" % self.machine_id
         return  0.0
 
     def getMachineId(self):
@@ -88,7 +108,7 @@ class Sbhs:
             machine_id = ord(self._read(1))
             return machine_id
         except:
-            print "Error: cannot read machine id from board %d" % self.boardnum
+            print "Error: cannot read machine id from machine id %d" % self.machine_id
         return -1
 
     def disconnect(self):
@@ -99,7 +119,7 @@ class Sbhs:
             self.status = 0
             return True
         except:
-            print "Error: cannot close the connection to the board"
+            print "Error: cannot close the connection to the machine id"
             return False
 
     def reset_board(self):
@@ -111,7 +131,7 @@ class Sbhs:
             data = self.boardcon.read(size)
             return data
         except:
-            print "Error: cannot read from board %d" % self.boardnum
+            print "Error: cannot read from machine id %d" % self.machine_id
             raise Exception
 
     def _write(self, data):
@@ -119,7 +139,7 @@ class Sbhs:
             self.boardcon.write(data)
             return True
         except:
-            print "Error: cannot write to board %d" % self.boardnum
+            print "Error: cannot write to machine id %d" % self.machine_id
             raise Exception
 
 
