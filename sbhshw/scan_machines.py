@@ -36,7 +36,7 @@ for device in device_files:
         print 'Invalid device name /dev/%s' % device
         continue
     # connect to device
-    res = s.connect(dev_id)
+    res = s.connect_device(dev_id)
     if not res:
         print 'Cannot connect to /dev/%s' % device
         s.disconnect()
@@ -47,6 +47,7 @@ for device in device_files:
         print 'Cannot get machine id from /dev/%s' % device
         s.disconnect()
         continue
+    print 'Found SBHS device /dev/%s with machine id %d' % (device, machine_id)
     map_str = "%d=/dev/%s\n" % (machine_id, device)
     map_machine_file.write(map_str)
 

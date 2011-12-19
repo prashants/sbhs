@@ -19,7 +19,7 @@ class Sbhs:
         self.status = 0
 
     def connect(self, machine_id):
-        """ Open a serial connection via USB to the SBHS """
+        """ Open a serial connection via USB to the SBHS using the machine id """
         # check for valid machine id number
         try:
             self.machine_id = int(machine_id)
@@ -60,6 +60,27 @@ class Sbhs:
             self.machine_id = 0
             self.boardcon = False
             self.status = 0
+        return False
+
+    def connect_device(self, device_num):
+        """ Open a serial connection via USB to the SBHS using USB Device Number"""
+        # check for valid device number
+        try:
+            self.device_num = int(device_num)
+        except:
+            print 'Invalid device number specified'
+            return False
+
+        usb_device_file = '/dev/ttyUSB%d' % self.device_num
+        # check if SBHS device is connected
+        if not os.path.exists(usb_device_file):
+            print 'SBHS device file ' + usb_device_file + ' does not exists'
+            return False
+        try:
+            self.boardcon = serial.Serial(port=usb_device_file, baudrate=9600, bytesize=8, parity='N', stopbits=1, timeout=2)
+            return True
+        except:
+            print "Error: cannot connect to device %s" % usb_device_file
         return False
 
     def setHeat(self, val):
