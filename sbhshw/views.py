@@ -55,6 +55,9 @@ def startexp(request):
             time = cur_dt.hour,                         # current hour
         )
 
+        # test connection to SBHS device
+
+
         # set the log file name and create the necessary folders
         # log file name format : LOG_FILE_BASE_PATH + ROLLNO + TIMESTAMP.txt
         log_file_name = datetime.datetime.now().strftime('%d%b%Y_%H_%M_%S') + ".txt"
@@ -153,6 +156,11 @@ def communicate(request):
         html = json.dumps(['S', '0', 'Invalid scilab client timestamp'])
         return HttpResponse(html)
 
+    # get scilab client variable arguments
+    scilab_client_variables = request.POST.get('variables', None)
+    if not scilab_client_variables:
+        scilab_client_variables = ''
+
     # set heat value
     err = False
     scilab_client_heat = request.POST.get('heat', None)
@@ -212,7 +220,8 @@ def communicate(request):
     server_end_ts = int(time.time() * 1000)
 
     # return data to user
-    server_data = "%s %s %s %s %d %d %2.2f" % (scilab_client_iteration, scilab_client_timestamp, scilab_client_heat, scilab_client_fan, server_start_ts, server_end_ts, temperature)
+    server_data = "%s %s %s %2.2f" % (scilab_client_iteration, scilab_client_heat, scilab_client_fan, temperature)
+    server_data = "%s %s %d %d %s" % (server_data, scilab_client_timestamp, server_start_ts, server_end_ts, scilab_client_variables)
 
     # write to log file
     log_file = request.session.get('log_file', None)

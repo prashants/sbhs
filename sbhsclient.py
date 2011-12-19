@@ -138,12 +138,14 @@ def startexperiment():
             scilabwritestr = scilabwritef.readline()
             if scilabwritestr:
                 print '\nRead...', scilabwritestr
-                scilabwritedata = scilabwritestr.split()
+                scilabwritestr = scilabwritestr.strip()
+                scilabwritedata = scilabwritestr.split(' ', 3)
                 cur_iter = int(float(scilabwritedata[0]))
-                cur_time = int(float(scilabwritedata[1]))
-                cur_heat = int(float(scilabwritedata[2]))
-                cur_fan = int(float(scilabwritedata[3]))
-                print "data send %d, %d, %d, %d" % (cur_iter, cur_time, cur_heat, cur_fan)
+                cur_heat = int(float(scilabwritedata[1]))
+                cur_fan = int(float(scilabwritedata[2]))
+                cur_variables = ''.join(scilabwritedata[3:]) # converting variable arg list to string
+                cur_time = int(time() * 1000)
+                print "data sent => iteration = %d : heat = %d : fan = %d : timestamp = %d : variables = %s" % (cur_iter, cur_heat, cur_fan, cur_time, cur_variables)
             else:
                 continue
 
@@ -157,7 +159,7 @@ def startexperiment():
                     return False
                 try:
                     url_com = base_url + 'communicate'
-                    postdata = urllib.urlencode({'iteration' : cur_iter, 'timestamp' : cur_time, 'heat' : cur_heat, 'fan' : cur_fan})
+                    postdata = urllib.urlencode({'iteration' : cur_iter, 'heat' : cur_heat, 'fan' : cur_fan, 'variables' : cur_variables, 'timestamp' : cur_time})
                     req = urllib2.Request(url_com)
                     res = urllib2.urlopen(req, postdata)
                     content = res.read()
@@ -166,7 +168,7 @@ def startexperiment():
                     # check if content is received properly
                     if content[0] == 'D':
                         if content[1] == '1':
-                            print content[2]
+                            print "data received <=", content[2]
                             # write data to file
                             scilabreadf.write(content[2] + '\n')
                             scilabreadf.flush()
