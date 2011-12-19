@@ -139,13 +139,17 @@ def startexperiment():
             if scilabwritestr:
                 print '\nRead...', scilabwritestr
                 scilabwritestr = scilabwritestr.strip()
-                scilabwritedata = scilabwritestr.split(' ', 3)
-                cur_iter = int(float(scilabwritedata[0]))
-                cur_heat = int(float(scilabwritedata[1]))
-                cur_fan = int(float(scilabwritedata[2]))
-                cur_variables = ''.join(scilabwritedata[3:]) # converting variable arg list to string
-                cur_time = int(time() * 1000)
-                print "data sent => iteration = %d : heat = %d : fan = %d : timestamp = %d : variables = %s" % (cur_iter, cur_heat, cur_fan, cur_time, cur_variables)
+                try:
+                    scilabwritedata = scilabwritestr.split(' ', 3)
+                    cur_iter = int(float(scilabwritedata[0]))
+                    cur_heat = int(float(scilabwritedata[1]))
+                    cur_fan = int(float(scilabwritedata[2]))
+                    cur_variables = ''.join(scilabwritedata[3:]) # converting variable arguments list to string
+                    cur_time = int(time() * 1000)
+                    print "data sent => iteration = %d : heat = %d : fan = %d : timestamp = %d : variables = %s" % (cur_iter, cur_heat, cur_fan, cur_time, cur_variables)
+                except:
+                    print 'Invalid data format in scilab write file. Continuing to next data.'
+                    continue
             else:
                 continue
 
