@@ -168,12 +168,17 @@ def startexperiment():
                     # check if content is received properly
                     if content[0] == 'D':
                         if content[1] == '1':
-                            print "data received <=", content[2]
+                            data_str = content[2]
+                            data_str += ' %d' % int(time() * 1000) # add client received time stamp
+                            # if variable arguments present in server response append it
+                            if content[3]:
+                                data_str += ' ' + content[3]
+                            print "data received <=", data_str
                             # write data to file
-                            scilabreadf.write(content[2] + '\n')
+                            scilabreadf.write(data_str + '\n')
                             scilabreadf.flush()
                             # write data to log
-                            logf.write(content[2] + '\n')
+                            logf.write(data_str + '\n')
                             logf.flush()
                         else:
                             print 'Error fetching data from server:', content[2]

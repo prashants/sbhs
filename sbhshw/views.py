@@ -221,10 +221,7 @@ def communicate(request):
 
     # return data to user
     server_data = "%s %s %s %2.2f" % (scilab_client_iteration, scilab_client_heat, scilab_client_fan, temperature)
-    if scilab_client_variables:
-        server_data = "%s %s %d %d %s" % (server_data, scilab_client_timestamp, server_start_ts, server_end_ts, scilab_client_variables)
-    else:
-        server_data = "%s %s %d %d" % (server_data, scilab_client_timestamp, server_start_ts, server_end_ts)
+    server_data = "%s %s %d %d" % (server_data, scilab_client_timestamp, server_start_ts, server_end_ts)
 
     # write to log file
     log_file = request.session.get('log_file', None)
@@ -234,14 +231,17 @@ def communicate(request):
         return HttpResponse(html)
     try:
         lf = open(log_file, "a")
-        lf.write(server_data + '\n')
+        if scilab_client_variables:
+            lf.write(server_data + ' ' + scilab_client_variables + '\n')
+        else:
+            lf.write(server_data + '\n')
         lf.close()
     except:
         clearsession()
         html = json.dumps(['S', '0', "Error writing to server log file"])
         return HttpResponse(html)
 
-    html = json.dumps(['D', '1', server_data])
+    html = json.dumps(['D', '1', server_data, scilab_client_variables])
     return HttpResponse(html)
 
 def clearsession(request):
