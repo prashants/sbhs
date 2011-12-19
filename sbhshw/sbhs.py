@@ -29,7 +29,7 @@ class Sbhs:
 
         # get the usb device file from the machine map file
         try:
-            map_file = open('map_machine_ids.txt', 'r')
+            map_file = open('/home/cdeep/vlabs/vlabs_sbhs/sbhshw/map_machine_ids.txt', 'r')
             usb_device_file = False
             for mapping_str in map_file.readlines():
                 mapping = mapping_str.split('=')

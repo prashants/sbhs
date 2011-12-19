@@ -1,11 +1,13 @@
-- data file format
+- add client receipt ts 
 - get time from start / end time database column. 5 minutes before end time and stop python client also
 - reset all server boards in last five minutes
 - documentation
 - scilab file read / write on client simultaneously
-- variable number of arguments
 - upload client log file after the experiment is over
 - testing
+- check invalid data supplied by client
+- change server name
+- simplify and document server migration
 
 completed :
 - better log file name

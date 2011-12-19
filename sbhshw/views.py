@@ -221,7 +221,10 @@ def communicate(request):
 
     # return data to user
     server_data = "%s %s %s %2.2f" % (scilab_client_iteration, scilab_client_heat, scilab_client_fan, temperature)
-    server_data = "%s %s %d %d %s" % (server_data, scilab_client_timestamp, server_start_ts, server_end_ts, scilab_client_variables)
+    if scilab_client_variables:
+        server_data = "%s %s %d %d %s" % (server_data, scilab_client_timestamp, server_start_ts, server_end_ts, scilab_client_variables)
+    else:
+        server_data = "%s %s %d %d" % (server_data, scilab_client_timestamp, server_start_ts, server_end_ts)
 
     # write to log file
     log_file = request.session.get('log_file', None)
