@@ -48,23 +48,45 @@ def startexp(request):
         else:
             user = user[0]
 
-        # check the slot booking for user for current date and hour
+        # check the slot booking for user for current date
         booking = SlotBooking.objects.filter(
             rollno = rollno,
             slot_date = cur_dt.strftime("%d/%m/%Y"),    # current date
-            time = cur_dt.hour,                         # current hour
         )
         # check if booking found
         if booking:
-            cur_booking = booking[0]
+            cur_booking = False
+            # loop through each booking and check the start and end time
+            for temp_booking in booking:
+                try:
+                    temp_start_h, temp_start_m = temp_booking.start_time.split('.')
+                    temp_end_h, temp_end_m = temp_booking.end_time.split('.')
+                    temp_start_h = int(temp_start_h)
+                    temp_start_m = int(temp_start_m)
+                    temp_end_h = int(temp_end_h)
+                    temp_end_m = int(temp_end_m)
+                    ts_check = False
+                    # validate whether current time is within start time and end time
+                    if cur_dt.hour >= temp_start_h:
+                        if cur_dt.minute >= temp_start_m:
+                            if cur_dt.hour < temp_end_h:
+                                ts_check = True
+                            elif cur_dt.hour == temp_end_h:
+                                if cur_dt.minute <= temp_end_m:
+                                    ts_check = True
+                    if ts_check:
+                        cur_booking = temp_booking
+                        break
+                except:
+                    continue
         else:
             html = json.dumps(['S', '0', 'No valid slot found'])
             return HttpResponse(html)
         if not cur_booking:
-            html = json.dumps(['S', '0', 'No valid slot found'])
+            html = json.dumps(['S', '0', 'No valid slot found for current time'])
             return HttpResponse(html)
 
-        # test connection to SBHS device by reading the temprature value
+        # test connection to SBHS device by reading the temperature value
         testconn = sbhs.Sbhs()
         res = testconn.connect(cur_booking.mid)
         if not res:

@@ -2,7 +2,6 @@ code :
 - get time from start / end time database column. 5 minutes before end time and stop python client also
 - reset all server boards in last five minutes
 - scilab file read / write on client simultaneously
-- test connection to SBHS device
 
 others :
 - testing
@@ -18,4 +17,5 @@ completed :
 - sbhs query and mapping of machine id
 - add client receipt ts
 - check invalid data supplied by client
+- test connection to SBHS device
 
