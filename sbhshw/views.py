@@ -54,12 +54,30 @@ def startexp(request):
             slot_date = cur_dt.strftime("%d/%m/%Y"),    # current date
             time = cur_dt.hour,                         # current hour
         )
+        # check if booking found
+        if booking:
+            cur_booking = booking[0]
+        else:
+            html = json.dumps(['S', '0', 'No valid slot found'])
+            return HttpResponse(html)
+        if not cur_booking:
+            html = json.dumps(['S', '0', 'No valid slot found'])
+            return HttpResponse(html)
 
-        # test connection to SBHS device
-
+        # test connection to SBHS device by reading the temprature value
+        testconn = sbhs.Sbhs()
+        res = testconn.connect(cur_booking.mid)
+        if not res:
+            html = json.dumps(['S', '0', 'Failed to connect to the SBHS device'])
+            return HttpResponse(html)
+        testtemp = testconn.getTemp()
+        testconn.disconnect()
+        if testtemp < 1.0:
+            html = json.dumps(['S', '0', 'Failed to communicate with the SBHS device'])
+            return HttpResponse(html)
 
         # set the log file name and create the necessary folders
-        # log file name format : LOG_FILE_BASE_PATH + ROLLNO + TIMESTAMP.txt
+        # log file name format : LOG_FILE_BASE_PATH / ROLLNO / TIMESTAMP.txt
         log_file_name = datetime.datetime.now().strftime('%d%b%Y_%H_%M_%S') + ".txt"
         # check if user folder exists
         log_file_folder = log_file_path + rollno + "/"
@@ -83,23 +101,17 @@ def startexp(request):
             html = json.dumps(['S', '0', 'Failed to create log file'])
             return HttpResponse(html)
 
-        # if user and slot validated then set the session data
-        if booking:
-            booking = booking[0]
-            request.session['logged_in'] = '1'
-            request.session['slot_id'] = booking.slot_id
-            request.session['rollno'] = booking.rollno
-            request.session['slot_date'] = booking.slot_date
-            request.session['start_time'] = booking.start_time
-            request.session['end_time'] = booking.end_time
-            request.session['mid'] = booking.mid
-            request.session['log_file'] = log_file_folder + log_file_name
-            html = json.dumps(['S', '1', 'Login Successful and slot found', log_file_name])
-            return HttpResponse(html)
-        else:
-            clearsession(request)
-            html = json.dumps(['S', '0', 'No valid slot found'])
-            return HttpResponse(html)
+        # if user and slot validated and everything is ok then set the session data
+        request.session['logged_in'] = '1'
+        request.session['slot_id'] = cur_booking.slot_id
+        request.session['rollno'] = cur_booking.rollno
+        request.session['slot_date'] = cur_booking.slot_date
+        request.session['start_time'] = cur_booking.start_time
+        request.session['end_time'] = cur_booking.end_time
+        request.session['mid'] = cur_booking.mid
+        request.session['log_file'] = log_file_folder + log_file_name
+        html = json.dumps(['S', '1', 'Login Successful and slot found', log_file_name])
+        return HttpResponse(html)
     else:
         clearsession(request)
         return HttpResponse("Please use the SBHS Client")
