@@ -172,6 +172,15 @@ def communicate(request):
     # server packet received timestamp in UNIX EPOCH millisecond 
     server_start_ts = int(time.time() * 1000)
 
+    # check if experiment end time has reached
+    exp_end_timestamp = request.session.get('end_time', None)
+    if not exp_end_timestamp:
+        html = json.dumps(['S', '0', 'Cannot retrive the experiment end time'])
+        return HttpResponse(html)
+    if exp_end_timestamp < time.time():
+        html = json.dumps(['S', '1', 'END'])
+        return HttpResponse(html)
+
     # connect to SBHS
     s = sbhs.Sbhs()
     res = s.connect(request.session.get('mid', None))

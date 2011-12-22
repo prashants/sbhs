@@ -188,6 +188,10 @@ def startexperiment():
                             print 'Error fetching data from server:', content[2]
                     else:
                         if content[1] == '1':
+                            # check if end of experiment reached
+                            if content[2] == 'END':
+                                print 'Experiement timeout reached. Experiment over'
+                                return True
                             print 'Received status message from server:', content[2]
                         else:
                             print 'Error fetching response from server:', content[2]
