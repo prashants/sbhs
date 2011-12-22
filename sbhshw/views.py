@@ -28,6 +28,7 @@ def startexp(request):
     """ start experiment for authenticated users """
     if request.method == "POST":
         cur_dt = datetime.datetime.now()
+        exp_diff_ts = 0
 
         rollno = request.POST.get('rollno', None)
         password = request.POST.get('password', None)
@@ -75,6 +76,9 @@ def startexp(request):
                     exp_end_ts = exp_end_ts - datetime.timedelta(minutes=5) # adding a 5 minute buffer before experiment end time
                     # check if user is within the slot time
                     if cur_dt >= exp_start_ts and cur_dt <= exp_end_ts:
+                        exp_end_timestamp = time.mktime(exp_end_ts.utctimetuple())
+                        exp_diff_ts = time.mktime(exp_end_ts.utctimetuple()) - time.mktime(cur_dt.utctimetuple())
+                        exp_diff_ts = int(exp_diff_ts / 60)
                         cur_booking = temp_booking
                         break
                 except:
@@ -128,11 +132,10 @@ def startexp(request):
         request.session['slot_id'] = cur_booking.slot_id
         request.session['rollno'] = cur_booking.rollno
         request.session['slot_date'] = cur_booking.slot_date
-        request.session['start_time'] = cur_booking.start_time
-        request.session['end_time'] = cur_booking.end_time
+        request.session['end_time'] = int(exp_end_timestamp)
         request.session['mid'] = cur_booking.mid
         request.session['log_file'] = log_file_folder + log_file_name
-        html = json.dumps(['S', '1', 'Login Successful and slot found', log_file_name])
+        html = json.dumps(['S', '1', 'Login Successful and slot found. You have ' + str(exp_diff_ts) + ' minutes remaining', log_file_name])
         return HttpResponse(html)
     else:
         clearsession(request)
