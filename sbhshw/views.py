@@ -66,15 +66,15 @@ def startexp(request):
                     temp_end_h = int(temp_end_h)
                     temp_end_m = int(temp_end_m)
                     ts_check = False
-                    # validate whether current time is within start time and end time
-                    if cur_dt.hour >= temp_start_h:
-                        if cur_dt.minute >= temp_start_m:
-                            if cur_dt.hour < temp_end_h:
-                                ts_check = True
-                            elif cur_dt.hour == temp_end_h:
-                                if cur_dt.minute <= temp_end_m:
-                                    ts_check = True
-                    if ts_check:
+                    # setting the experiment start and end time stamps
+                    time_format = '%d/%m/%Y %H.%M.%S'
+                    exp_start_str = temp_booking.slot_date + ' ' + temp_booking.start_time + '.00'
+                    exp_end_str = temp_booking.slot_date + ' ' + temp_booking.end_time + '.00'
+                    exp_start_ts = datetime.datetime.fromtimestamp(time.mktime(time.strptime(exp_start_str, time_format)))
+                    exp_end_ts = datetime.datetime.fromtimestamp(time.mktime(time.strptime(exp_end_str, time_format)))
+                    exp_end_ts = exp_end_ts - datetime.timedelta(minutes=5) # adding a 5 minute buffer before experiment end time
+                    # check if user is within the slot time
+                    if cur_dt >= exp_start_ts and cur_dt <= exp_end_ts:
                         cur_booking = temp_booking
                         break
                 except:
@@ -83,7 +83,7 @@ def startexp(request):
             html = json.dumps(['S', '0', 'No valid slot found'])
             return HttpResponse(html)
         if not cur_booking:
-            html = json.dumps(['S', '0', 'No valid slot found for current time'])
+            html = json.dumps(['S', '0', 'No valid slot found for today. Please note that you cannot start a experiment within last 5 minutes of end time'])
             return HttpResponse(html)
 
         # test connection to SBHS device by reading the temperature value

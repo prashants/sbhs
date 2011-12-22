@@ -118,7 +118,7 @@ class Sbhs:
             temp = ord(self._read(1)) + (0.1 * ord(self._read(1)))
             return temp
         except:
-            print "Error: cannot read temprature from machine id %d" % self.machine_id
+            print "Error: cannot read temperature from machine id %d" % self.machine_id
         return  0.0
 
     def getMachineId(self):
