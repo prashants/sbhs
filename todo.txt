@@ -3,6 +3,7 @@ code :
 - reset all server boards in last five minutes
 - scilab file read / write on client simultaneously
 - logging
+- check for time stamp with 00 values
 
 others :
 - testing

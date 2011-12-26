@@ -1,6 +1,8 @@
 import serial
 import os
 
+MAP_FILE = '/home/cdeep/sbhspyserver/sbhshw/map_machine_ids.txt'
+
 OUTGOING_MACHINE_ID  = 252
 INCOMING_FAN  = 253
 INCOMING_HEAT = 254
@@ -29,7 +31,7 @@ class Sbhs:
 
         # get the usb device file from the machine map file
         try:
-            map_file = open('/home/cdeep/vlabs/vlabs_sbhs/sbhshw/map_machine_ids.txt', 'r')
+            map_file = open(MAP_FILE, 'r')
             usb_device_file = False
             for mapping_str in map_file.readlines():
                 mapping = mapping_str.split('=')
