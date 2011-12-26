@@ -1,0 +1,125 @@
+****** THIS IS THE SBHS PYTHON DJANGO SERVER DEPLOYMENT GUIDE ********
+
+Notes :
+
+1. Backup all files before modifying them
+
+2. If the path starts with '/' then its from the root folder, else consider
+the file to be located in the current server
+
+3. Restart apache after every change
+$sudo service apache2 restart
+
+4. Monitor apache log files for any error messages
+$tail -f /var/log/apache2/error.log
+
+Install Apache and Django :
+---------------------------
+
+1. Django version required is 1.2.1
+Check current django version
+$django-admin --version
+
+2. Python version required is 2.6.6
+Check current python version
+$python --version
+
+3. Install following packages
+$sudo apt-get install libapache2-mod-wsgi python-mysqldb apache2 apache2-mpm-prefork apache2-utils
+$sudo apt-get libapache2-mod-php5 phpmyadmin libmysqlclient16 mysql-server php5-mysql python-mysqldb
+
+4. Install Django 1.2.1 [Length: 6248006 - 6.0M]
+Download django from :	https://www.djangoproject.com/download/
+			http://www.djangoproject.com/download/1.2.1/tarball/
+
+$wget http://media.djangoproject.com/releases/1.2/Django-1.2.1.tar.gz
+$tar zxvf Django-1.2.1.tar.gz
+$cd Django-1.2.1
+$sudo python setup.py install
+
+5. Check version of django installed
+$django-admin --version
+
+Setup database :
+----------------
+
+1. Create a database if needed
+
+2. Create the database table structure as per 'docs/database.sql'
+
+Setup Apache and Django Connection :
+------------------------------------
+
+1. In the '/etc/apache2/sites-available/default' file *after* this section :
+
+	DocumentRoot /var/www
+	<Directory />
+		Options FollowSymLinks
+		AllowOverride None
+	</Directory>
+	<Directory /var/www/>
+		Options Indexes FollowSymLinks MultiViews ExecCGI
+		AllowOverride All
+		Order allow,deny
+		allow from all
+	</Directory>
+
+*add* the following lines after setting up the correct server path :
+
+WSGIScriptAlias /sbhs /home/cdeep/sbhspyserver/apache/django.wsgi
+<Directory "/home/cdeep/sbhspyserver/apache/">
+Order deny,allow
+Allow from all
+</Directory>
+
+This is tell apache that when ever user visits the http://somewebsite.com/sbhs load
+the django interface
+
+Copy of the file is available as docs/etc_apache2_sites-available_default
+
+Setup Django settings :
+-----------------------
+
+1. Edit the Django settings files 'settings.py' and modify following parameters if needed :
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.mysql', # Add 'postgresql_psycopg2', 'postgresql', 'mysql', 'sqlite3' or 'oracle'.
+        'NAME': 'sbhs',                       # Or path to database file if using sqlite3.
+        'USER': 'root',                       # Not used with sqlite3.
+        'PASSWORD': 'root',                   # Not used with sqlite3.
+        'HOST': '',                           # Set to empty string for localhost. Not used with sqlite3.
+        'PORT': '',                           # Set to empty string for default. Not used with sqlite3.
+    }
+}
+TIME_ZONE = 'Asia/Calcutta'
+SECRET_KEY = '+gz!whwja7kc9jo3z78^+@^so=(&zpp275kt@t=bd1y#nn4uuz'
+
+2. Must change this parameter as per the folder name of the server :
+
+ROOT_URLCONF = 'sbhspyserver.urls'
+
+Setup Django to point to correct project files :
+------------------------------------------------
+
+1. Change the following parameters in the 'apache/django.wsgi'
+
+sys.path.append('/home/cdeep/sbhspyserver')
+sys.path.append('/home/cdeep/sbhspyserver/sbhshw')
+ 
+os.environ['DJANGO_SETTINGS_MODULE'] = 'sbhspyserver.settings'
+
+Update the Machine ID Map file path :
+-------------------------------------
+
+1. Edit the 'sbhshw/sbhs.py' file and change the following lines :
+
+MAP_FILE = '/home/cdeep/sbhspyserver/sbhshw/map_machine_ids.txt'
+
+Change the LOG file path :
+--------------------------
+
+1. Edit the 'sbhshw/views.py' file and change the following lines :
+
+log_file_path = "/home/cdeep/LOG/"
+

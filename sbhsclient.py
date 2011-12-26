@@ -203,6 +203,18 @@ def startexperiment():
         print '\nExperiment terminated...'
         return False
 
+def endexperiment():
+    global base_url
+    url_check = base_url + 'endexp'
+    try:
+        req = urllib2.Request(url_check)
+        res = urllib2.urlopen(req)
+        content = res.read()
+        return True
+    except:
+        print 'Connection error ! Please check your internet connection and proxy settings'
+        return False
+
 ######################## START EXPERIMENT ###########################
 
 # check connection
@@ -212,27 +224,33 @@ for c in range(3):
 
 # authenticate user
 if not authenticate():
+    endexperiment()
     sys.exit()
 else:
     print 'Backup log file name for this experiment is', cur_log_file
 
 # setup log files on client machine
 if not initlogfiles():
+    endexperiment()
     sys.exit()
 
 # start the experiment
 if not startexperiment():
+    scilabwritef.flush()
     scilabwritef.close()
     scilabreadf.flush()
     scilabreadf.close()
     logf.flush()
     logf.close()
 else:
+    scilabwritef.flush()
     scilabwritef.close()
     scilabreadf.flush()
     scilabreadf.close()
     logf.flush()
     logf.close()
 
+endexperiment()
 print 'Thank you for using the SBHS Virtual Labs project'
 sys.exit()
+
