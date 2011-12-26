@@ -11,7 +11,7 @@ import os
 
 rollno = '111'
 
-useProxy = 1
+useProxy = 0
 proxy_info = {
     'user' : 'prashantsh',
     'pass' : 'asdf1234$',
@@ -21,7 +21,7 @@ proxy_info = {
 
 ################## SYSTEM SETTINGS ######################
 
-base_url = 'http://10.102.152.29/django/sbhs/'
+base_url = 'http://10.102.152.29/sbhs/'
 cur_log_file = ''
 scilabreadfname = 'scilabread.sce'
 scilabwritefname = 'scilabwrite.sce'

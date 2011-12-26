@@ -16,8 +16,8 @@ urlpatterns = patterns('',
     # (r'^admin/', include(admin.site.urls)),
 
     # SBHS HARDWARE
-    (r'^sbhs/checkconnection', 'sbhshw.views.checkconnection'),
-    (r'^sbhs/startexp', 'sbhshw.views.startexp'),
-    (r'^sbhs/communicate', 'sbhshw.views.communicate'),
-    (r'^sbhs/endexp', 'sbhshw.views.endexp'),
+    (r'^checkconnection', 'sbhshw.views.checkconnection'),
+    (r'^startexp', 'sbhshw.views.startexp'),
+    (r'^communicate', 'sbhshw.views.communicate'),
+    (r'^endexp', 'sbhshw.views.endexp'),
 )
