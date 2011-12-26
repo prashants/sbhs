@@ -2,6 +2,7 @@ code :
 - get time from start / end time database column. 5 minutes before end time and stop python client also
 - reset all server boards in last five minutes
 - scilab file read / write on client simultaneously
+- logging
 
 others :
 - testing

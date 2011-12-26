@@ -5,10 +5,10 @@ project = os.path.dirname(apache_configuration)
 workspace = os.path.dirname(project)
 sys.path.append(workspace)
 
-sys.path.append('/home/cdeep/vlabs/vlabs_sbhs')
-sys.path.append('/home/cdeep/vlabs/sbhshw')
+sys.path.append('/home/cdeep/sbhspyserver')
+sys.path.append('/home/cdeep/sbhspyserver/sbhshw')
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'vlabs_sbhs.settings'
+os.environ['DJANGO_SETTINGS_MODULE'] = 'sbhspyserver.settings'
 
 import django.core.handlers.wsgi
 
