@@ -17,7 +17,7 @@ Install Apache and Django :
 ---------------------------
 
 1. Django version required is 1.2.1
-Check current django version if django is installed
+Check current django version if django is already installed
 $django-admin --version
 
 2. Python version required is 2.6.6
@@ -39,6 +39,16 @@ $sudo python setup.py install
 
 5. Check version of django installed
 $django-admin --version
+It should be more than 1.2.1
+
+Setup the SBHS Django application :
+-----------------------------------
+
+1. Copy the 'sbhspyserver' server setup to /var folder
+
+2. Change ownership of the '/var/sbhspyserver/' folder to user 'www-data' and
+group 'www-data'
+$sudo chown www-data:www-data /var/sbhspyserver -R
 
 Setup Apache and Django Connection :
 ------------------------------------
@@ -120,7 +130,7 @@ MAP_FILE = '/var/sbhspyserver/sbhshw/map_machine_ids.txt'
 Change the LOG file path :
 --------------------------
 
-1. Create a folder for storing LOG files
+1. Create a folder for storing LOG files and change ownership
 $sudo mkdir /var/sbhspylog
 $sudo chown www-data:www-data /var/sbhspylog
 
@@ -128,4 +138,22 @@ $sudo chown www-data:www-data /var/sbhspylog
 point to the above created LOG path :
 
 log_file_path = "/var/sbhspylog/"
+
+Run the Machine MAP generation tool
+-----------------------------------
+
+1. Run the following command to generate the machine map file
+$./run_map.sh
+
+Udpate the server URL in the SBHS Client :
+------------------------------------------
+
+1. Edit the './client/sbhsclient.py' file and change the URL to
+the IP/URL of the actual server
+
+base_url = 'http://10.102.152.29/sbhs/'
+
+2. Run the client and test the connection
+$cd client
+$python sbhsclient.py
 
