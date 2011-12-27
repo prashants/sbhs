@@ -1,7 +1,7 @@
 import serial
 import os
 
-MAP_FILE = '/home/cdeep/sbhspyserver/sbhshw/map_machine_ids.txt'
+MAP_FILE = '/var/sbhspyserver/sbhshw/map_machine_ids.txt'
 
 OUTGOING_MACHINE_ID  = 252
 INCOMING_FAN  = 253
@@ -131,7 +131,7 @@ class Sbhs:
             machine_id = ord(self._read(1))
             return machine_id
         except:
-            print "Error: cannot read machine id from machine id %d" % self.machine_id
+            print "Error: cannot read machine id from /dev/ttyUSB%d" % self.device_num
         return -1
 
     def disconnect(self):
