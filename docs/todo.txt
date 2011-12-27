@@ -8,7 +8,7 @@ code :
 
 others :
 - testing
-- change server name
+- change server path to /var
 - simplify and document server migration
 
 additional features :

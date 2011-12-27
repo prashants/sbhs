@@ -13,8 +13,8 @@
 		allow from all
 	</Directory>
 
-WSGIScriptAlias /sbhs /home/cdeep/sbhspyserver/apache/django.wsgi
-<Directory "/home/cdeep/sbhspyserver/apache/">
+WSGIScriptAlias /sbhs /var/sbhspyserver/apache/django.wsgi
+<Directory "/var/sbhspyserver/apache/">
 Order deny,allow
 Allow from all
 </Directory>

@@ -5,7 +5,7 @@ Notes :
 1. Backup all files before modifying them
 
 2. If the path starts with '/' then its from the root folder, else consider
-the file to be located in the current server
+the file to be located in the current server path
 
 3. Restart apache after every change
 $sudo service apache2 restart
@@ -17,7 +17,7 @@ Install Apache and Django :
 ---------------------------
 
 1. Django version required is 1.2.1
-Check current django version
+Check current django version if django is installed
 $django-admin --version
 
 2. Python version required is 2.6.6
@@ -40,13 +40,6 @@ $sudo python setup.py install
 5. Check version of django installed
 $django-admin --version
 
-Setup database :
-----------------
-
-1. Create a database if needed
-
-2. Create the database table structure as per 'docs/database.sql'
-
 Setup Apache and Django Connection :
 ------------------------------------
 
@@ -64,18 +57,26 @@ Setup Apache and Django Connection :
 		allow from all
 	</Directory>
 
-*add* the following lines after setting up the correct server path :
+*Add* the following lines after setting up the correct server path :
 
-WSGIScriptAlias /sbhs /home/cdeep/sbhspyserver/apache/django.wsgi
-<Directory "/home/cdeep/sbhspyserver/apache/">
+WSGIScriptAlias /sbhs /var/sbhspyserver/apache/django.wsgi
+<Directory "/var/sbhspyserver/apache/">
 Order deny,allow
 Allow from all
 </Directory>
 
-This is tell apache that when ever user visits the http://somewebsite.com/sbhs load
+This tells apache that when ever user visits the http://yourwebsite.com/sbhs load
 the django interface
 
-Copy of the file is available as docs/etc_apache2_sites-available_default
+Copy of the file is available as './docs/etc_apache2_sites-available_default'
+
+Setup database :
+----------------
+
+1. Create a database if needed from the phpmyadmin interface located at
+http://localhost/phpmyadmin
+
+2. Import the database table structure located in the file './docs/database.sql'
 
 Setup Django settings :
 -----------------------
@@ -102,24 +103,29 @@ ROOT_URLCONF = 'sbhspyserver.urls'
 Setup Django to point to correct project files :
 ------------------------------------------------
 
-1. Change the following parameters in the 'apache/django.wsgi'
+1. Change the following parameters in the './apache/django.wsgi'
 
-sys.path.append('/home/cdeep/sbhspyserver')
-sys.path.append('/home/cdeep/sbhspyserver/sbhshw')
+sys.path.append('/var/sbhspyserver')
+sys.path.append('/var/sbhspyserver/sbhshw')
  
 os.environ['DJANGO_SETTINGS_MODULE'] = 'sbhspyserver.settings'
 
 Update the Machine ID Map file path :
 -------------------------------------
 
-1. Edit the 'sbhshw/sbhs.py' file and change the following lines :
+1. Edit the './sbhshw/sbhs.py' file and change the following lines :
 
-MAP_FILE = '/home/cdeep/sbhspyserver/sbhshw/map_machine_ids.txt'
+MAP_FILE = '/var/sbhspyserver/sbhshw/map_machine_ids.txt'
 
 Change the LOG file path :
 --------------------------
 
-1. Edit the 'sbhshw/views.py' file and change the following lines :
+1. Create a folder for storing LOG files
+$sudo mkdir /var/sbhspylog
+$sudo chown www-data:www-data /var/sbhspylog
 
-log_file_path = "/home/cdeep/LOG/"
+2. Edit the './sbhshw/views.py' file and change the following lines to
+point to the above created LOG path :
+
+log_file_path = "/var/sbhspylog/"
 

@@ -17,7 +17,7 @@ from django.views.decorators.csrf import csrf_exempt
 # 2: SUCCESS / FAILED : 1/0
 # 3: MESSAGE : MESSAGE STRING
 
-log_file_path = "/home/cdeep/LOG/"
+log_file_path = "/var/sbhspylog/"
 
 def checkconnection(request):
     """ test connection """
