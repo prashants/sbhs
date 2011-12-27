@@ -26,7 +26,7 @@ $python --version
 
 3. Install following packages
 $sudo apt-get install libapache2-mod-wsgi python-mysqldb apache2 apache2-mpm-prefork apache2-utils
-$sudo apt-get libapache2-mod-php5 phpmyadmin libmysqlclient16 mysql-server php5-mysql python-mysqldb
+$sudo apt-get install libapache2-mod-php5 phpmyadmin libmysqlclient16 mysql-server php5-mysql python-mysqldb
 
 4. Install Django 1.2.1 [Length: 6248006 - 6.0M]
 Download django from :	https://www.djangoproject.com/download/
