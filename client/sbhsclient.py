@@ -78,7 +78,9 @@ if user_use_proxy.lower() == 'yes':
 else:
     opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie_support), urllib2.HTTPHandler)
 urllib2.install_opener(opener)
-#socket.setdefaulttimeout(5)
+
+# set connection timeout to 4 seconds
+socket.setdefaulttimeout(4)
 
 ##################### MAIN CODE #########################
 
