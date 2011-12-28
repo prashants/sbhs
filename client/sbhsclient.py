@@ -2,8 +2,8 @@
 
 ################## SYSTEM SETTINGS ######################
 
-#base_url = 'http://10.102.152.29/sbhs/'
-base_url = 'http://220.224.227.3/sbhs/'
+base_url = 'http://10.102.152.29/sbhs/'
+#base_url = 'http://220.224.227.3/sbhs/'
 cur_log_file = ''
 scilabreadfname = 'scilabread.sce'
 scilabwritefname = 'scilabwrite.sce'
@@ -79,8 +79,8 @@ else:
     opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie_support), urllib2.HTTPHandler)
 urllib2.install_opener(opener)
 
-# set connection timeout to 4 seconds
-socket.setdefaulttimeout(4)
+# set connection timeout to 5 seconds
+socket.setdefaulttimeout(5)
 
 ##################### MAIN CODE #########################
 

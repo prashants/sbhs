@@ -1,6 +1,6 @@
-[sbhsclient]	# do not remove this line
-rollno = rupak	# type roll number or username
-use_proxy = yes	# type yes or no
+[sbhsclient]
+rollno = 111
+use_proxy = no
 proxy_username = prashantsh 
 proxy_password = 
 proxy_host = netmon.iitb.ac.in

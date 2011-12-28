@@ -60,12 +60,6 @@ def startexp(request):
             # loop through each booking and check the start and end time
             for temp_booking in booking:
                 try:
-                    temp_start_h, temp_start_m = temp_booking.start_time.split('.')
-                    temp_end_h, temp_end_m = temp_booking.end_time.split('.')
-                    temp_start_h = int(temp_start_h)
-                    temp_start_m = int(temp_start_m)
-                    temp_end_h = int(temp_end_h)
-                    temp_end_m = int(temp_end_m)
                     ts_check = False
                     # setting the experiment start and end time stamps
                     time_format = '%d/%m/%Y %H.%M.%S'
