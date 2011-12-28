@@ -4,11 +4,7 @@ code :
 - scilab file read / write on client simultaneously
 - logging
 - check for time stamp with 00 values
-- on end of experiment call the endexp url
 - check for all parameters to be int
-- move all settings to top
-- change POST to debug mode
-- check for windows proxy + cookies
 
 others :
 - automated testing
@@ -18,6 +14,7 @@ additional features :
 - upload client log file after the experiment is over
 - documentation
 - setup script
+- change POST to debug mode
 
 completed :
 - better log file name
@@ -26,3 +23,6 @@ completed :
 - check invalid data supplied by client
 - test connection to SBHS device
 - change server path to /var
+- on end of experiment call the endexp url
+- move all settings to top
+- check for windows proxy + cookies
