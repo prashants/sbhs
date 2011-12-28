@@ -143,7 +143,8 @@ Run the Machine MAP generation tool
 -----------------------------------
 
 1. Run the following command to generate the machine map file
-$./run_map.sh
+$cd /var/sbhspyserver
+$sudo ./run_map.sh
 
 Udpate the server URL in the SBHS Client :
 ------------------------------------------

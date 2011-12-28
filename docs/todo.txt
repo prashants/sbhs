@@ -5,15 +5,16 @@ code :
 - logging
 - check for time stamp with 00 values
 - on end of experiment call the endexp url
+- check for all parameters to be int
 
 others :
-- testing
-- change server path to /var
-- simplify and document server migration
+- automated testing
+- two sets of docs for migration - simple and advance
 
 additional features :
 - upload client log file after the experiment is over
 - documentation
+- setup script
 
 completed :
 - better log file name
@@ -21,4 +22,4 @@ completed :
 - add client receipt ts
 - check invalid data supplied by client
 - test connection to SBHS device
-
+- change server path to /var

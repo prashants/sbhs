@@ -13,8 +13,8 @@ rollno = '111'
 
 useProxy = 0
 proxy_info = {
-    'user' : 'prashantsh',
-    'pass' : 'asdf1234$',
+    'user' : '',
+    'pass' : '',
     'host' : 'netmon.iitb.ac.in',
     'port' : 80 # or 8080 or whatever
 }
