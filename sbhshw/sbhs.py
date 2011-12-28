@@ -58,7 +58,7 @@ class Sbhs:
             self.status = 1
             return True
         except:
-            print "Error: cannot connect to machine id %d" % machine_id
+            print "Error: cannot connect to machine id %d" % self.machine_id
             self.machine_id = 0
             self.boardcon = False
             self.status = 0

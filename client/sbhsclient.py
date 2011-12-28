@@ -1,22 +1,15 @@
 #!/usr/bin/python
 
-import urllib2, urllib, cookielib
-from time import time
-import sys
-import json
-from getpass import getpass
-import os
-
 ################## USER PARAMETERS ######################
 
 rollno = '111'
 
-useProxy = 0
+useProxy = True                     # True or False
 proxy_info = {
-    'user' : '',
-    'pass' : '',
-    'host' : 'netmon.iitb.ac.in',
-    'port' : 80 # or 8080 or whatever
+    'user' : 'prashantsh',          # proxy username
+    'pass' : 'asdf1234$',           # proxy password
+    'host' : 'netmon.iitb.ac.in',   # proxy server
+    'port' : 80                     # proxy port address
 }
 
 ################## SYSTEM SETTINGS ######################
@@ -28,24 +21,37 @@ scilabwritefname = 'scilabwrite.sce'
 exp_time = ''
 max_retry = 20
 
-################## GLOBAL VARIABLES ####################
+#########################################################
+############ DO NOT EDIT AFTER THIS LINE ################
+#########################################################
+
+import urllib2, urllib, cookielib
+from time import time
+import sys
+import json
+from getpass import getpass
+import os
+
+################### GLOBAL VARIABLES ####################
 scilabreadf = ''
 scilabwritef = ''
 logf = ''
 
-################### MAIN CODE ############################
+################### MAIN CODE ###########################
 
 # proxy handling
 if useProxy:
     # build a new opener that uses a proxy requiring authorization
     proxy_support = urllib2.ProxyHandler({"http" : "http://%(user)s:%(pass)s@%(host)s:%(port)d" % proxy_info})
-    opener = urllib2.build_opener(proxy_support, urllib2.HTTPHandler)
-    # install it
-    urllib2.install_opener(opener)
 
 # cookie handling
 cookie_support = cookielib.CookieJar()
-opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie_support))
+
+# enabling support for cookies and proxy    
+if useProxy:
+    opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie_support), urllib2.HTTPHandler, proxy_support)
+else:
+    opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie_support), urllib2.HTTPHandler)
 urllib2.install_opener(opener)
 
 def checkconnection():
@@ -75,10 +81,15 @@ def authenticate():
     global cur_log_file, base_url, exp_time
     password = getpass()
     url_auth = base_url + 'startexp'
-    postdata = urllib.urlencode({'rollno' : rollno, 'password' : password})
-    req = urllib2.Request(url_auth)
-    res = urllib2.urlopen(req, postdata)
-    content = res.read()
+    try:
+        postdata = urllib.urlencode({'rollno' : rollno, 'password' : password})
+        req = urllib2.Request(url_auth)
+        es = urllib2.urlopen(req, postdata)
+        content = res.read()
+    except:
+        print 'Connection error ! Please check your internet connection and proxy settings'
+        return False
+ 
     content = json.loads(content)
     if not content[0] == 'S':
         print 'Invalid data received'

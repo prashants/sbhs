@@ -6,6 +6,9 @@ code :
 - check for time stamp with 00 values
 - on end of experiment call the endexp url
 - check for all parameters to be int
+- move all settings to top
+- change POST to debug mode
+- check for windows proxy + cookies
 
 others :
 - automated testing
