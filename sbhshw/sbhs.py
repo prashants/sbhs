@@ -146,7 +146,7 @@ class Sbhs:
             return False
 
     def reset_board(self):
-        self.setFan(100)
+        self.setFan(250)
         self.setHeat(0)
 
     def _read(self, size):

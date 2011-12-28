@@ -1,21 +1,9 @@
 #!/usr/bin/python
 
-################## USER PARAMETERS ######################
-
-rollno = '111'
-
-useProxy = False                    # True or False
-proxy_info = {
-    'user' : 'prashantsh',          # proxy username
-    'pass' : '',                    # proxy password
-    'host' : 'netmon.iitb.ac.in',   # proxy server
-    'port' : 80                     # proxy port address
-}
-
 ################## SYSTEM SETTINGS ######################
 
-base_url = 'http://10.102.152.29/sbhs/'
-#base_url = 'http://220.224.227.3/sbhs/'
+#base_url = 'http://10.102.152.29/sbhs/'
+base_url = 'http://220.224.227.3/sbhs/'
 cur_log_file = ''
 scilabreadfname = 'scilabread.sce'
 scilabwritefname = 'scilabwrite.sce'
@@ -26,34 +14,73 @@ max_retry = 20
 ############ DO NOT EDIT AFTER THIS LINE ################
 #########################################################
 
-import urllib2, urllib, cookielib
+import urllib2, urllib, cookielib, socket
 from time import time
 import sys
 import json
-from getpass import getpass
 import os
+from getpass import getpass
+from ConfigParser import ConfigParser
 
 ################### GLOBAL VARIABLES ####################
 scilabreadf = ''
 scilabwritef = ''
 logf = ''
 
-################### MAIN CODE ###########################
+########## CONNECTION INITIALIZATION CODE ###############
 
-# proxy handling
-if useProxy:
+# Parse the user configuration file settings.ini
+config_parser = ConfigParser()
+if not config_parser.read('settings.txt'):
+    print 'Cannot locate the "settings.ini" file. Please read the SBHS Guide on how to configure the SBHS client'
+    sys.exit()
+try:
+    user_rollno = config_parser.get('sbhsclient', 'rollno')
+    user_use_proxy = config_parser.get('sbhsclient', 'use_proxy')
+    if user_use_proxy.lower() == 'yes':
+        user_proxy_username = config_parser.get('sbhsclient', 'proxy_username')
+        user_proxy_password = config_parser.get('sbhsclient', 'proxy_password')
+        user_proxy_host = config_parser.get('sbhsclient', 'proxy_host')
+        user_proxy_port = config_parser.get('sbhsclient', 'proxy_port')
+    else:
+        user_proxy_username = '' 
+        user_proxy_password = '' 
+        user_proxy_host = '' 
+        user_proxy_port = ''
+except:
+    print 'Invalid settings in the "setttings.ini" file. Please read the SBHS Guide on how to configure the SBHS client settings'
+    sys.exit()
+
+# Setup connection details including proxy and cookie support """
+if user_use_proxy.lower() == 'yes':
     # build a new opener that uses a proxy requiring authorization
-    proxy_support = urllib2.ProxyHandler({"http" : "http://%(user)s:%(pass)s@%(host)s:%(port)d" % proxy_info})
+    if user_proxy_username:
+        proxy_info = {
+            'user' : user_proxy_username,   # proxy username
+            'pass' : user_proxy_password,   # proxy password
+            'host' : user_proxy_host,       # proxy server
+            'port' : user_proxy_port        # proxy port address
+        }
+        proxy_support = urllib2.ProxyHandler({"http" : "http://%(user)s:%(pass)s@%(host)s:%(port)s" % proxy_info})
+    else:
+        proxy_info = {
+            'host' : user_proxy_host,       # proxy server
+            'port' : user_proxy_port        # proxy port address
+        }
+        proxy_support = urllib2.ProxyHandler({"http" : "http://%(host)s:%(port)s" % proxy_info})
 
 # cookie handling
 cookie_support = cookielib.CookieJar()
 
 # enabling support for cookies and proxy    
-if useProxy:
+if user_use_proxy.lower() == 'yes':
     opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie_support), urllib2.HTTPHandler, proxy_support)
 else:
     opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie_support), urllib2.HTTPHandler)
 urllib2.install_opener(opener)
+#socket.setdefaulttimeout(5)
+
+##################### MAIN CODE #########################
 
 def checkconnection():
     """ test connection to server """
@@ -83,7 +110,7 @@ def authenticate():
     password = getpass()
     url_auth = base_url + 'startexp'
     try:
-        postdata = urllib.urlencode({'rollno' : rollno, 'password' : password})
+        postdata = urllib.urlencode({'rollno' : user_rollno, 'password' : password})
         req = urllib2.Request(url_auth)
         res = urllib2.urlopen(req, postdata)
         content = res.read()
@@ -227,7 +254,7 @@ def endexperiment():
         print 'Connection error ! Please check your internet connection and proxy settings'
         return False
 
-######################## START EXPERIMENT ###########################
+################### START EXPERIMENT #####################
 
 # check connection
 for c in range(3):
