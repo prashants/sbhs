@@ -2,12 +2,12 @@
 
 ################## USER PARAMETERS ######################
 
-rollno = '111'
+rollno = 'rupak'
 
-useProxy = True                     # True or False
+useProxy = False                    # True or False
 proxy_info = {
     'user' : 'prashantsh',          # proxy username
-    'pass' : 'asdf1234$',           # proxy password
+    'pass' : '',                    # proxy password
     'host' : 'netmon.iitb.ac.in',   # proxy server
     'port' : 80                     # proxy port address
 }
@@ -15,6 +15,7 @@ proxy_info = {
 ################## SYSTEM SETTINGS ######################
 
 base_url = 'http://10.102.152.29/sbhs/'
+#base_url = 'http://220.224.227.3/sbhs/'
 cur_log_file = ''
 scilabreadfname = 'scilabread.sce'
 scilabwritefname = 'scilabwrite.sce'
@@ -84,7 +85,7 @@ def authenticate():
     try:
         postdata = urllib.urlencode({'rollno' : rollno, 'password' : password})
         req = urllib2.Request(url_auth)
-        es = urllib2.urlopen(req, postdata)
+        res = urllib2.urlopen(req, postdata)
         content = res.read()
     except:
         print 'Connection error ! Please check your internet connection and proxy settings'
