@@ -2,7 +2,7 @@
 rollno = rupak	# type roll number or username
 use_proxy = yes	# type yes or no
 proxy_username = prashantsh 
-proxy_password = asdf1234$
+proxy_password = 
 proxy_host = netmon.iitb.ac.in
 proxy_port = 80
 
