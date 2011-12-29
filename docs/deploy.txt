@@ -169,6 +169,20 @@ base_url = 'http://10.102.152.29/sbhs/'
 $cd client
 $python sbhsclient.py
 
+Add reset all board scipt to crontab :
+--------------------------------------
+
+1. Edit the current crontab to call the reset all board script every hour and
+59 minutes
+$crontab -e
+
+Add the below line :
+
+56 * * * * cd /var/sbhspyserver/sbhshw/; python reset_all_boards.py > /dev/null
+
+2. To disable the autorun in the crontab, comment the above line with a '#' symbol
+$crontab -e
+
 Scilab Read / Write file formats :
 ----------------------------------
 
