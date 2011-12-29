@@ -64,7 +64,11 @@ def startexp(request):
                     # setting the experiment start and end time stamps
                     time_format = '%d/%m/%Y %H.%M.%S'
                     exp_start_str = temp_booking.slot_date + ' ' + temp_booking.start_time + '.00'
-                    exp_end_str = temp_booking.slot_date + ' ' + temp_booking.end_time + '.00'
+                    # if end time is 00.00 then change it to 23.59.00 to prevent roll over to next day
+                    if temp_booking.end_time == '00.00':
+                        exp_end_str = temp_booking.slot_date + ' ' + '23.59.00'
+                    else:
+                        exp_end_str = temp_booking.slot_date + ' ' + temp_booking.end_time + '.00'
                     exp_start_ts = datetime.datetime.fromtimestamp(time.mktime(time.strptime(exp_start_str, time_format)))
                     exp_end_ts = datetime.datetime.fromtimestamp(time.mktime(time.strptime(exp_end_str, time_format)))
                     exp_end_ts = exp_end_ts - datetime.timedelta(minutes=5) # adding a 5 minute buffer before experiment end time
