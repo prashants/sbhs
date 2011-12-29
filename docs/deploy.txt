@@ -13,6 +13,17 @@ $sudo service apache2 restart
 4. Monitor apache log files for any error messages
 $tail -f /var/log/apache2/error.log
 
+SBHS device permissions :
+-------------------------
+
+1. Create a file called '/etc/udev/rules.d/10-sbhs.rules' with the content :
+
+SYSFS{idVendor}=="0403", SYSFS{idProduct}=="6001", MODE="666"
+
+This will ensure that sbhs device file is created with read and write permissions
+to everyone. A copy of the file is available as './docs/etc_udev_rules.d_10-sbhs.rules'
+for reference
+
 Install Apache and Django :
 ---------------------------
 
