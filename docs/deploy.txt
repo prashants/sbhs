@@ -137,6 +137,7 @@ Update the Machine ID Map file path :
 1. Edit the './sbhshw/sbhs.py' file and change the following lines :
 
 MAP_FILE = '/var/sbhspyserver/sbhshw/map_machine_ids.txt'
+LOG_FILE = '/var/sbhspylog/sbhserr.log'
 
 Change the LOG file path :
 --------------------------
