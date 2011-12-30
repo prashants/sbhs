@@ -1,7 +1,5 @@
 code :
 - scilab file read / write on client simultaneously
-- logging
-- check for all parameters to be int
 
 others :
 - automated testing
@@ -26,3 +24,5 @@ completed :
 - get time from start / end time database column. 5 minutes before end time and stop python client also
 - check for time stamp with 00 values
 - reset all server boards in last five minutes
+- check for all parameters to be int
+- logging
