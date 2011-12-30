@@ -143,8 +143,9 @@ def startexp(request):
 def endexp(request):
     """ end experimentand reset board  """
     s = sbhs.Sbhs()
-    if request.session.get('mid', None): 
-        res = s.connect(request.session.get('mid', None))
+    cur_mid = request.session.get('mid', None)
+    if cur_mid is not None:
+        res = s.connect(cur_mid)
         if res:
             s.reset_board()
             s.disconnect()
@@ -181,7 +182,12 @@ def communicate(request):
 
     # connect to SBHS
     s = sbhs.Sbhs()
-    res = s.connect(request.session.get('mid', None))
+    cur_mid = request.session.get('mid', None)
+    if cur_mid is None:
+        clearsession(request)
+        html = json.dumps(['S', '0', 'Invalid machine id specified'])
+        return HttpResponse(html)
+    res = s.connect(cur_mid)
     if not res:
         html = json.dumps(['S', '0', 'Cannot connect to SBHS'])
         return HttpResponse(html)
@@ -290,19 +296,17 @@ def communicate(request):
 
 def clearsession(request):
     """ clear the user session data """
-    if request.session.get('logged_in', None):
+    if request.session.get('logged_in', None) is not None:
         del request.session['logged_in']
-    if request.session.get('slot_id', None):
+    if request.session.get('slot_id', None) is not None:
         del request.session['slot_id']
-    if request.session.get('rollno', None):
+    if request.session.get('rollno', None) is not None:
         del request.session['rollno']
-    if request.session.get('slot_date', None):
+    if request.session.get('slot_date', None) is not None:
         del request.session['slot_date']
-    if request.session.get('start_time', None):
-        del request.session['start_time']
-    if request.session.get('end_time', None):
+    if request.session.get('end_time', None) is not None:
         del request.session['end_time']
-    if request.session.get('mid', None):
+    if request.session.get('mid', None) is not None:
         del request.session['mid']
-    if request.session.get('log_file', None):
+    if request.session.get('log_file', None) is not None:
         del request.session['log_file']

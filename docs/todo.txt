@@ -1,5 +1,4 @@
 code :
-- reset all server boards in last five minutes
 - scilab file read / write on client simultaneously
 - logging
 - check for all parameters to be int
@@ -26,3 +25,4 @@ completed :
 - check for windows proxy + cookies
 - get time from start / end time database column. 5 minutes before end time and stop python client also
 - check for time stamp with 00 values
+- reset all server boards in last five minutes
