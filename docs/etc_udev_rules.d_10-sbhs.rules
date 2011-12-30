@@ -1,2 +1,2 @@
-SYSFS{idVendor}=="0403", SYSFS{idProduct}=="6001", MODE="666"
+SYSFS{idVendor}=="0403", SYSFS{idProduct}=="6001", MODE="666", RUN+="/var/sbhspyserver/run_map.sh"
 

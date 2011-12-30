@@ -16,9 +16,10 @@ $tail -f /var/log/apache2/error.log
 SBHS device permissions :
 -------------------------
 
-1. Create a file called '/etc/udev/rules.d/10-sbhs.rules' with the content :
+1. Create a file called '/etc/udev/rules.d/10-sbhs.rules' with the content after editing the
+path of the run_map.sh file :
 
-SYSFS{idVendor}=="0403", SYSFS{idProduct}=="6001", MODE="666"
+SYSFS{idVendor}=="0403", SYSFS{idProduct}=="6001", MODE="666", RUN+="/var/sbhspyserver/run_map.sh"
 
 This will ensure that sbhs device file is created with read and write permissions
 to everyone. A copy of the file is available as './docs/etc_udev_rules.d_10-sbhs.rules'
@@ -150,6 +151,13 @@ $sudo chown www-data:www-data /var/sbhspylog
 point to the above created LOG path :
 
 log_file_path = "/var/sbhspylog/"
+
+Edit the the Machine MAP generation tool path :
+-----------------------------------------------
+
+1. Edit the '/var/sbhspyserver/run_map.sh' file and change the following lines :
+
+'cd /var/sbhspyserver/sbhshw/'
 
 Run the Machine MAP generation tool
 -----------------------------------
