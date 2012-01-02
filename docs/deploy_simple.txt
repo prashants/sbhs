@@ -19,7 +19,7 @@ SBHS device permissions :
 1. Create a file called '/etc/udev/rules.d/10-sbhs.rules' with the content after editing the
 path of the run_map.sh file :
 
-SYSFS{idVendor}=="0403", SYSFS{idProduct}=="6001", MODE="666", RUN+="/var/sbhspyserver/run_map.sh"
+SYSFS{idVendor}=="0403", SYSFS{idProduct}=="6001", MODE="666"
 
 This will ensure that sbhs device file is created with read and write permissions
 to everyone. A copy of the file is available as './docs/etc_udev_rules.d_10-sbhs.rules'

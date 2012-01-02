@@ -1,5 +1,6 @@
 code :
 - scilab file read / write on client simultaneously
+- remotely simulate plugin and plugout of sbhs
 
 others :
 - automated testing
