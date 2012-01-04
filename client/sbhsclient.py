@@ -176,7 +176,16 @@ def startexperiment():
     try:
         while True:
             # read data from file that scilab writes to
-            scilabwritestr = scilabwritef.readline()
+            retry_read = True
+            while retry_read:
+                cur_scilabwrite_pos = scilabwritef.tell()
+                scilabwritestr = scilabwritef.readline()
+                if not scilabwritestr.endswith('\n'):
+                    scilabwritef.seek(cur_scilabwrite_pos)
+                    retry_read = True
+                else:
+                    retry_read = False
+
             if scilabwritestr:
                 print '\nRead...', scilabwritestr
                 scilabwritestr = scilabwritestr.strip()
