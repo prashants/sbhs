@@ -3,6 +3,7 @@
 ################## SYSTEM SETTINGS ######################
 
 base_url = 'http://220.224.227.3/sbhs/'
+base_url = 'http://10.102.152.29/sbhs/'
 cur_log_file = ''
 scilabreadfname = 'scilabread.sce'
 scilabwritefname = 'scilabwrite.sce'
@@ -25,6 +26,7 @@ from ConfigParser import ConfigParser
 scilabreadf = ''
 scilabwritef = ''
 logf = ''
+current_client_vesrion = '1'
 
 ########## CONNECTION INITIALIZATION CODE ###############
 
@@ -83,6 +85,17 @@ socket.setdefaulttimeout(10)
 
 ##################### MAIN CODE #########################
 
+def checkpythonversion():
+    pyver = sys.version_info
+    print 'Current python version is %d.%d' % (pyver[0], pyver[1])
+    if pyver[0] != 2:
+        print 'Please use python version 2.6 or above'
+        return False
+    if pyver[1] < 6:
+        print 'Please use python version 2.6 or above'
+        return False
+    return True
+
 def checkconnection():
     """ test connection to server """
     global base_url
@@ -100,6 +113,24 @@ def checkconnection():
             return True
         else:
             print 'Connection data error...'
+            return False
+    except:
+        print 'Connection error ! Please check your internet connection and proxy settings'
+        return False
+
+def clientversion():
+    """ test the version of client to use """
+    global base_url, current_client_vesrion
+    url_check = base_url + 'clientversion'
+    try:
+        req = urllib2.Request(url_check)
+        res = urllib2.urlopen(req)
+        content = res.read()
+        if content == current_client_vesrion: 
+            print 'Client version...OK'
+            return True
+        else:
+            print 'Client version does not match. Please download the latest version from our website'
             return False
     except:
         print 'Connection error ! Please check your internet connection and proxy settings'
@@ -266,9 +297,17 @@ def endexperiment():
 
 ################### START EXPERIMENT #####################
 
+# check python version
+if not checkpythonversion():
+        sys.exit()
+
 # check connection
 for c in range(3):
     if not checkconnection():
+        sys.exit()
+
+# check client version required
+if not clientversion():
         sys.exit()
 
 # authenticate user

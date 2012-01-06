@@ -1,6 +1,6 @@
 [sbhsclient]
 rollno = 111
-use_proxy = yes
+use_proxy = no
 proxy_username = 
 proxy_password = 
 proxy_host = localhost

@@ -18,10 +18,17 @@ from django.views.decorators.csrf import csrf_exempt
 # 3: MESSAGE : MESSAGE STRING
 
 log_file_path = "/var/sbhspylog/"
+required_client_version = '1'
 
+@csrf_exempt
 def checkconnection(request):
     """ test connection """
-    return HttpResponse("TESTOK")
+    return HttpResponse('TESTOK')
+
+@csrf_exempt
+def clientversion(request):
+    """ sbhs client connection """
+    return HttpResponse(required_client_version)
 
 @csrf_exempt
 def startexp(request):

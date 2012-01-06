@@ -1,6 +1,10 @@
 code :
 - scilab file read / write on client simultaneously
 - remotely simulate plugin and plugout of sbhs
+- auto update client
+- socket timeout settings
+- retry settings
+- ask username/password and also save it
 
 others :
 - automated testing
@@ -27,3 +31,4 @@ completed :
 - reset all server boards in last five minutes
 - check for all parameters to be int
 - logging
+- check version of client
