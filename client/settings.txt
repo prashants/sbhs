@@ -1,8 +1,7 @@
 [sbhsclient]
 rollno = 111
-use_proxy = no
-proxy_username = prashantsh 
+use_proxy = yes
+proxy_username = 
 proxy_password = 
-proxy_host = netmon.iitb.ac.in
-proxy_port = 80
-
+proxy_host = localhost
+proxy_port = 3128
