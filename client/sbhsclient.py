@@ -26,23 +26,24 @@ from ConfigParser import ConfigParser
 scilabreadf = ''
 scilabwritef = ''
 logf = ''
-current_client_vesrion = '1'
+current_client_version = '1'
 
 ########## CONNECTION INITIALIZATION CODE ###############
 
 # Parse the user configuration file settings.ini
 config_parser = ConfigParser()
 if not config_parser.read('settings.txt'):
-    print 'Cannot locate the "settings.ini" file. Please read the SBHS Guide on how to configure the SBHS client'
+    print 'Cannot locate the "settings.txt" file. Please read the SBHS Guide on how to configure the SBHS client'
     sys.exit()
 try:
-    user_rollno = config_parser.get('sbhsclient', 'rollno')
-    user_use_proxy = config_parser.get('sbhsclient', 'use_proxy')
-    if user_use_proxy.lower() == 'yes':
-        user_proxy_username = config_parser.get('sbhsclient', 'proxy_username')
-        user_proxy_password = config_parser.get('sbhsclient', 'proxy_password')
-        user_proxy_host = config_parser.get('sbhsclient', 'proxy_host')
-        user_proxy_port = config_parser.get('sbhsclient', 'proxy_port')
+    user_rollno = config_parser.get('sbhsclient', 'rollno').strip()
+    user_password = config_parser.get('sbhsclient', 'password').strip()
+    user_use_proxy = config_parser.get('sbhsclient', 'use_proxy').strip()
+    if user_use_proxy.lower().strip() == 'yes':
+        user_proxy_username = config_parser.get('sbhsclient', 'proxy_username').strip()
+        user_proxy_password = config_parser.get('sbhsclient', 'proxy_password').strip()
+        user_proxy_host = config_parser.get('sbhsclient', 'proxy_host').strip()
+        user_proxy_port = config_parser.get('sbhsclient', 'proxy_port').strip()
     else:
         user_proxy_username = '' 
         user_proxy_password = '' 
@@ -120,13 +121,13 @@ def checkconnection():
 
 def clientversion():
     """ test the version of client to use """
-    global base_url, current_client_vesrion
+    global base_url, current_client_version
     url_check = base_url + 'clientversion'
     try:
         req = urllib2.Request(url_check)
         res = urllib2.urlopen(req)
         content = res.read()
-        if content == current_client_vesrion: 
+        if content == current_client_version: 
             print 'Client version...OK'
             return True
         else:
@@ -138,11 +139,16 @@ def clientversion():
 
 def authenticate():
     """ authenticate user and setup the experiment timeout """
-    global cur_log_file, base_url, exp_time
-    password = getpass()
+    global cur_log_file, base_url, exp_time, user_rollno, user_password
+    # get username if not set
+    if not user_rollno:
+        user_rollno = raw_input('Username/Roll Number:')
+    # get password
+    if not user_password:
+        user_password = getpass()
     url_auth = base_url + 'startexp'
     try:
-        postdata = urllib.urlencode({'rollno' : user_rollno, 'password' : password})
+        postdata = urllib.urlencode({'rollno' : user_rollno, 'password' : user_password})
         req = urllib2.Request(url_auth)
         res = urllib2.urlopen(req, postdata)
         content = res.read()

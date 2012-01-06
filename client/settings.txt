@@ -1,7 +1,8 @@
 [sbhsclient]
-rollno = 111
+rollno = 
+password = 11111 
 use_proxy = no
 proxy_username = 
 proxy_password = 
-proxy_host = localhost
-proxy_port = 3128
+proxy_host = 
+proxy_port =
