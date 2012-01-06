@@ -1,14 +1,13 @@
 code :
 - scilab file read / write on client simultaneously
 - remotely simulate plugin and plugout of sbhs
-- auto update client
 - socket timeout settings
 - retry settings
-- ask username/password and also save it
 
 others :
 - automated testing
 - two sets of docs for migration - simple and advance
+- auto update client
 
 additional features :
 - upload client log file after the experiment is over
@@ -32,3 +31,4 @@ completed :
 - check for all parameters to be int
 - logging
 - check version of client
+- ask username/password and also save it
