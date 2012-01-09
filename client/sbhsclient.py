@@ -3,7 +3,6 @@
 ################## SYSTEM SETTINGS ######################
 
 base_url = 'http://220.224.227.3/sbhs/'
-base_url = 'http://10.102.152.29/sbhs/'
 cur_log_file = ''
 scilabreadfname = 'scilabread.sce'
 scilabwritefname = 'scilabwrite.sce'
@@ -14,9 +13,20 @@ max_retry = 20
 ############ DO NOT EDIT AFTER THIS LINE ################
 #########################################################
 
+import sys
+# check python version before proceeding
+python_ver = sys.version_info
+print 'Current python version is %d.%d' % (python_ver[0], python_ver[1])
+if python_ver[0] != 2:
+    print 'Please use python version 2.6 or above'
+    sys.exit(1)
+if python_ver[1] < 6:
+    print 'Please use python version 2.6 or above'
+    sys.exit(1)
+
+
 import urllib2, urllib, cookielib, socket
 from time import time
-import sys
 import json
 import os
 from getpass import getpass
@@ -49,8 +59,17 @@ try:
         user_proxy_password = '' 
         user_proxy_host = '' 
         user_proxy_port = ''
+    user_timeout = config_parser.get('sbhsclient', 'timeout').strip()
+    if user_timeout:
+        try:
+            user_timeout = int(user_timeout)
+        except:
+            print 'Invalid timeout specified in the "settings.txt" file'
+            sys.exit()
+    else:
+        user_timeout = 10
 except:
-    print 'Invalid settings in the "setttings.ini" file. Please read the SBHS Guide on how to configure the SBHS client settings'
+    print 'Invalid settings in the "setttings.txt" file. Please read the SBHS Guide on how to configure the SBHS client settings'
     sys.exit()
 
 # Setup connection details including proxy and cookie support """
@@ -81,21 +100,10 @@ else:
     opener = urllib2.build_opener(urllib2.HTTPCookieProcessor(cookie_support), urllib2.HTTPHandler)
 urllib2.install_opener(opener)
 
-# set connection timeout to 10 seconds
-socket.setdefaulttimeout(10)
+# set connection timeout in seconds
+socket.setdefaulttimeout(user_timeout)
 
 ##################### MAIN CODE #########################
-
-def checkpythonversion():
-    pyver = sys.version_info
-    print 'Current python version is %d.%d' % (pyver[0], pyver[1])
-    if pyver[0] != 2:
-        print 'Please use python version 2.6 or above'
-        return False
-    if pyver[1] < 6:
-        print 'Please use python version 2.6 or above'
-        return False
-    return True
 
 def checkconnection():
     """ test connection to server """
@@ -302,10 +310,6 @@ def endexperiment():
         return False
 
 ################### START EXPERIMENT #####################
-
-# check python version
-if not checkpythonversion():
-        sys.exit()
 
 # check connection
 for c in range(3):
