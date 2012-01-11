@@ -2,33 +2,33 @@
 
 ################## SYSTEM SETTINGS ######################
 
-base_url = 'http://220.224.227.3/sbhs/'
+base_url = 'http://10.102.152.5/sbhs/'
+#base_url = 'http://220.224.227.3/sbhs/'
 cur_log_file = ''
 scilabreadfname = 'scilabread.sce'
 scilabwritefname = 'scilabwrite.sce'
 exp_time = ''
-max_retry = 20
+max_retry = 200
 
 #########################################################
 ############ DO NOT EDIT AFTER THIS LINE ################
 #########################################################
 
-import sys
+from sys import version_info, exit
 # check python version before proceeding
-python_ver = sys.version_info
+python_ver = version_info
 print 'Current python version is %d.%d' % (python_ver[0], python_ver[1])
 if python_ver[0] != 2:
     print 'Please use python version 2.6 or above'
-    sys.exit(1)
+    exit(1)
 if python_ver[1] < 6:
     print 'Please use python version 2.6 or above'
-    sys.exit(1)
-
+    exit(1)
 
 import urllib2, urllib, cookielib, socket
 from time import time
-import json
-import os
+from os import path
+from json import loads
 from getpass import getpass
 from ConfigParser import ConfigParser
 
@@ -44,7 +44,7 @@ current_client_version = '1'
 config_parser = ConfigParser()
 if not config_parser.read('settings.txt'):
     print 'Cannot locate the "settings.txt" file. Please read the SBHS Guide on how to configure the SBHS client'
-    sys.exit()
+    exit(1)
 try:
     user_rollno = config_parser.get('sbhsclient', 'rollno').strip()
     user_password = config_parser.get('sbhsclient', 'password').strip()
@@ -65,12 +65,12 @@ try:
             user_timeout = int(user_timeout)
         except:
             print 'Invalid timeout specified in the "settings.txt" file'
-            sys.exit()
+            exit(1)
     else:
         user_timeout = 10
 except:
     print 'Invalid settings in the "setttings.txt" file. Please read the SBHS Guide on how to configure the SBHS client settings'
-    sys.exit()
+    exit(1)
 
 # Setup connection details including proxy and cookie support """
 if user_use_proxy.lower() == 'yes':
@@ -164,7 +164,7 @@ def authenticate():
         print 'Connection error ! Please check your internet connection and proxy settings'
         return False
  
-    content = json.loads(content)
+    content = loads(content)
     if not content[0] == 'S':
         print 'Invalid data received'
         return False
@@ -190,7 +190,7 @@ def initlogfiles():
     except:
         print 'Failed to create Scilab output file:', scilabwritefname
         return False
-    if os.path.isfile(cur_log_file):
+    if path.isfile(cur_log_file):
         print 'Log file', cur_log_file, ' already exists'
         return False
     try:
@@ -262,7 +262,7 @@ def startexperiment():
                     res = urllib2.urlopen(req, postdata)
                     content = res.read()
                     srv_data = True
-                    content = json.loads(content)
+                    content = loads(content)
                     # check if content is received properly
                     if content[0] == 'D':
                         if content[1] == '1':
@@ -314,23 +314,23 @@ def endexperiment():
 # check connection
 for c in range(3):
     if not checkconnection():
-        sys.exit()
+        exit(1)
 
 # check client version required
 if not clientversion():
-        sys.exit()
+        exit(1)
 
 # authenticate user
 if not authenticate():
     endexperiment()
-    sys.exit()
+    exit(1)
 else:
     print 'Backup log file name for this experiment is', cur_log_file
 
 # setup log files on client machine
 if not initlogfiles():
     endexperiment()
-    sys.exit()
+    exit(1)
 
 # start the experiment
 if not startexperiment():
@@ -350,5 +350,5 @@ else:
 
 endexperiment()
 print 'Thank you for using the SBHS Virtual Labs project'
-sys.exit()
+exit(0)
 
