@@ -319,9 +319,10 @@ temp_val = (int) val[1];
 temperature_c = temp_val;
 temp1 = temp_val;
 test1 = temp_val;
-lcd_data2[0] = (temp1/1000) + 48;
-lcd_data2[1] = (temp1/100)%10 + 48;
-lcd_data2[2] = (temp1/10)%10 + 48;
+//lcd_data2[0] = (temp1/1000) + 48;
+lcd_data2[0] = (temp1/100)%10 + 48;
+lcd_data2[1] = (temp1/10)%10 + 48;
+lcd_data2[2] = 46; //ASCII value for point(.)
 lcd_data2[3] = (temp1%10) + 48;
  
  //Serial data________________
@@ -332,7 +333,7 @@ lcd_data2[3] = (temp1%10) + 48;
  //lcd_data2[13] = (temp1 / 100) + 48;
  
  //MID value
-  temp1 = mid;
+ temp1 = mid;
  lcd_data2[15] = (temp1 % 10) + 48;
  lcd_data2[14] = (temp1 / 10);
  lcd_data2[14] = (lcd_data2[14] % 10) + 48;
