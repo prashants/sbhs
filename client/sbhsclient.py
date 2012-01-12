@@ -17,12 +17,12 @@ max_retry = 200
 from sys import version_info, exit
 # check python version before proceeding
 python_ver = version_info
-print 'Current python version is %d.%d' % (python_ver[0], python_ver[1])
+print('Current python version is %d.%d' % (python_ver[0], python_ver[1]))
 if python_ver[0] != 2:
-    print 'Please use python version 2.6 or above'
+    print('Please use python version 2.6 or above')
     exit(1)
 if python_ver[1] < 6:
-    print 'Please use python version 2.6 or above'
+    print('Please use python version 2.6 or above')
     exit(1)
 
 import urllib2, urllib, cookielib, socket
@@ -43,7 +43,7 @@ current_client_version = '1'
 # Parse the user configuration file settings.ini
 config_parser = ConfigParser()
 if not config_parser.read('settings.txt'):
-    print 'Cannot locate the "settings.txt" file. Please read the SBHS Guide on how to configure the SBHS client'
+    print('Cannot locate the "settings.txt" file. Please read the SBHS Guide on how to configure the SBHS client')
     exit(1)
 try:
     user_rollno = config_parser.get('sbhsclient', 'rollno').strip()
@@ -64,12 +64,12 @@ try:
         try:
             user_timeout = int(user_timeout)
         except:
-            print 'Invalid timeout specified in the "settings.txt" file'
+            print('Invalid timeout specified in the "settings.txt" file')
             exit(1)
     else:
         user_timeout = 10
 except:
-    print 'Invalid settings in the "setttings.txt" file. Please read the SBHS Guide on how to configure the SBHS client settings'
+    print('Invalid settings in the "setttings.txt" file. Please read the SBHS Guide on how to configure the SBHS client settings')
     exit(1)
 
 # Setup connection details including proxy and cookie support """
@@ -116,15 +116,15 @@ def checkconnection():
         content = res.read()
         end_time_ms = int(time() * 1000)
         if content == 'TESTOK':
-            print 'Connection successfull....'
+            print('Connection successfull....')
             network_delay = end_time_ms - start_time_ms
-            print 'Connection time taken is ' + str(network_delay) + ' milliseconds'
+            print('Connection time taken is ' + str(network_delay) + ' milliseconds')
             return True
         else:
-            print 'Connection data error...'
+            print('Connection data error...')
             return False
     except:
-        print 'Connection error ! Please check your internet connection and proxy settings'
+        print('Connection error ! Please check your internet connection and proxy settings')
         return False
 
 def clientversion():
@@ -136,13 +136,13 @@ def clientversion():
         res = urllib2.urlopen(req)
         content = res.read()
         if content == current_client_version: 
-            print 'Client version...OK'
+            print('Client version...OK')
             return True
         else:
-            print 'Client version does not match. Please download the latest version from our website'
+            print('Client version does not match. Please download the latest version from our website')
             return False
     except:
-        print 'Connection error ! Please check your internet connection and proxy settings'
+        print('Connection error ! Please check your internet connection and proxy settings')
         return False
 
 def authenticate():
@@ -161,18 +161,18 @@ def authenticate():
         res = urllib2.urlopen(req, postdata)
         content = res.read()
     except:
-        print 'Connection error ! Please check your internet connection and proxy settings'
+        print('Connection error ! Please check your internet connection and proxy settings')
         return False
  
     content = loads(content)
     if not content[0] == 'S':
-        print 'Invalid data received'
+        print('Invalid data received')
         return False
     if content[1] == '0':
-        print content[2]
+        print(content[2])
         return False
     else:
-        print content[2]
+        print(content[2])
         cur_log_file = content[3]
 
     return True
@@ -183,20 +183,20 @@ def initlogfiles():
     try:
         file(scilabreadfname, 'w').close()
     except:
-        print 'Failed to create Scilab input file:', scilabreadfname
+        print('Failed to create Scilab input file: ' + scilabreadfname)
         return False
     try:
         file(scilabwritefname, 'w').close()
     except:
-        print 'Failed to create Scilab output file:', scilabwritefname
+        print('Failed to create Scilab output file: ' + scilabwritefname)
         return False
     if path.isfile(cur_log_file):
-        print 'Log file', cur_log_file, ' already exists'
+        print('Log file' + cur_log_file + ' already exists')
         return False
     try:
        file(cur_log_file, 'w').close()
     except:
-        print 'Failed to create Log file:', cur_log_file
+        print('Failed to create Log file:' + cur_log_file)
         return False
     return True
 
@@ -211,10 +211,10 @@ def startexperiment():
         scilabwritef = file(scilabwritefname, 'r')
         logf = file(cur_log_file, 'w')
     except:
-        print 'Failed to access files needed for experiment'
+        print('Failed to access files needed for experiment')
         return False
 
-    print 'Experiment has started. Please start your Scilab client'
+    print('Experiment has started. Please start your Scilab client')
 
     # catch if Ctrl+C key is pressed by user and terminate the experiment
     try:
@@ -231,7 +231,7 @@ def startexperiment():
                     retry_read = False
 
             if scilabwritestr:
-                print '\nRead...', scilabwritestr
+                print('\nRead...' + scilabwritestr)
                 scilabwritestr = scilabwritestr.strip()
                 try:
                     scilabwritedata = scilabwritestr.split(' ', 3)
@@ -240,9 +240,9 @@ def startexperiment():
                     cur_fan = int(float(scilabwritedata[2]))
                     cur_variables = ''.join(scilabwritedata[3:]) # converting variable arguments list to string
                     cur_time = int(time() * 1000)
-                    print "data sent => iteration = %d : heat = %d : fan = %d : timestamp = %d : variables = %s" % (cur_iter, cur_heat, cur_fan, cur_time, cur_variables)
+                    print('data sent => iteration = %d : heat = %d : fan = %d : timestamp = %d : variables = %s' % (cur_iter, cur_heat, cur_fan, cur_time, cur_variables))
                 except:
-                    print 'Invalid data format in scilab write file. Continuing to next data.'
+                    print('Invalid data format in scilab write file. Continuing to next data.')
                     continue
             else:
                 continue
@@ -253,7 +253,7 @@ def startexperiment():
             while not srv_data:
                 # check for maximum server connection retry attempts
                 if retry_counter > max_retry:
-                    print 'Maximum connection retry reached'
+                    print('Maximum connection retry reached.')
                     return False
                 try:
                     url_com = base_url + 'communicate'
@@ -271,7 +271,7 @@ def startexperiment():
                             # if variable arguments present in server response append it
                             if content[3]:
                                 data_str += ' ' + content[3]
-                            print "data received <=", data_str
+                            print('data received <=' + data_str)
                             # write data to file
                             scilabreadf.write(data_str + '\n')
                             scilabreadf.flush()
@@ -279,22 +279,22 @@ def startexperiment():
                             logf.write(data_str + '\n')
                             logf.flush()
                         else:
-                            print 'Error fetching data from server:', content[2]
+                            print('Error fetching data from server: ' + content[2])
                     else:
                         if content[1] == '1':
                             # check if end of experiment reached
                             if content[2] == 'END':
-                                print 'Experiement timeout reached. Experiment over'
+                                print('Experiement timeout reached. Experiment over.')
                                 return True
-                            print 'Received status message from server:', content[2]
+                            print('Received status message from server: ' + content[2])
                         else:
-                            print 'Error fetching response from server:', content[2]
+                            print('Error fetching response from server: ' + content[2])
                 except:
-                    print 'Failed to connect to server...retrying'
+                    print('Failed to connect to server...retrying.')
                     retry_counter = retry_counter + 1
                     srv_data = False
     except KeyboardInterrupt:
-        print '\nExperiment terminated...'
+        print('\nExperiment terminated...')
         return False
 
 def endexperiment():
@@ -306,7 +306,7 @@ def endexperiment():
         content = res.read()
         return True
     except:
-        print 'Connection error ! Please check your internet connection and proxy settings'
+        print('Connection error ! Please check your internet connection and proxy settings.')
         return False
 
 ################### START EXPERIMENT #####################
@@ -325,7 +325,7 @@ if not authenticate():
     endexperiment()
     exit(1)
 else:
-    print 'Backup log file name for this experiment is', cur_log_file
+    print('Backup log file name for this experiment is ' + cur_log_file)
 
 # setup log files on client machine
 if not initlogfiles():
@@ -349,6 +349,6 @@ else:
     logf.close()
 
 endexperiment()
-print 'Thank you for using the SBHS Virtual Labs project'
+print('Thank you for using the SBHS Virtual Labs project.')
 exit(0)
 
