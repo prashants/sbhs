@@ -25,6 +25,8 @@ int temperature_c_upper_byte = 0;
 int temperature_c_lower_byte = 0;
 int temperature = 0; 
 int r=1;
+int lightdisp;
+int fandisp;
 
 int mid = 15;
 //Initializing microcontroller ports
@@ -99,7 +101,8 @@ ISR(USART_RXC_vect)
  {
   if (next_byte_light == 1)
   {
-   light = ser_data;
+   lightdisp = ser_data;
+   light = ((ser_data*40)/100);
    if (light > 40)
    {
    light = 40;
@@ -110,7 +113,8 @@ ISR(USART_RXC_vect)
   
   if (next_byte_fan == 1)
   {
-   fan = ser_data;
+   fandisp = ser_data;
+   fan = ((ser_data*251)/100);
    OCR1BL = fan; //fan speed input
    next_byte_fan = 0;
   }
@@ -342,14 +346,14 @@ lcd_data2[3] = (temp1%10) + 48;
  
  
  //Fan________________
- temp1 = fan;//---------------------
+ temp1 = fandisp;//---------------------
  lcd_data2[7] = (temp1 % 10) + 48;
  lcd_data2[6] = (temp1 / 10);
  lcd_data2[6] = (lcd_data2[6] % 10) + 48;
  lcd_data2[5] = (temp1 / 100) + 48;
  
  //Heater________________
- temp1 = light; //-----------------
+ temp1 = lightdisp; //-----------------
  lcd_data2[11] = (temp1 % 10) + 48;
  lcd_data2[10] = (temp1 / 10);
  lcd_data2[10] = (lcd_data2[10] % 10) + 48;
