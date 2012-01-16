@@ -71,8 +71,8 @@ def startexp(request):
                     # setting the experiment start and end time stamps
                     time_format = '%d/%m/%Y %H.%M.%S'
                     exp_start_str = temp_booking.slot_date + ' ' + temp_booking.start_time + '.00'
-                    # if end time is 00.00 then change it to 23.59.00 to prevent roll over to next day
-                    if temp_booking.end_time == '00.00':
+                    # if end time is 0.00 then change it to 23.59.00 to prevent roll over to next day
+                    if temp_booking.end_time == '0.00':
                         exp_end_str = temp_booking.slot_date + ' ' + '23.59.00'
                     else:
                         exp_end_str = temp_booking.slot_date + ' ' + temp_booking.end_time + '.00'
