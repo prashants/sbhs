@@ -81,7 +81,7 @@ Setup Apache and Django Connection :
 
 *Add* the following lines after setting up the correct server path :
 
-WSGIScriptAlias /sbhs /var/sbhspyserver/apache/django.wsgi
+WSGIScriptAlias /sb/hardware /var/sbhspyserver/apache/django.wsgi
 <Directory "/var/sbhspyserver/apache/">
 Order deny,allow
 Allow from all
