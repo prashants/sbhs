@@ -41,7 +41,7 @@ def startexp(request):
         password = request.POST.get('password', None)
         # check if username and password is present
         if not rollno or not password:
-            html = json.dumps(['S', '0', 'Please provide username and password'])
+            html = json.dumps(['S', '0', 'Please provide username and password.'])
             return HttpResponse(html)
 
         # authenticate user
@@ -51,7 +51,7 @@ def startexp(request):
             password = password,
         )
         if not user:
-            html = json.dumps(['S', '0', 'Authentication failed'])
+            html = json.dumps(['S', '0', 'Authentication failed. Please check your username and password.'])
             return HttpResponse(html)
         else:
             user = user[0]
@@ -89,22 +89,22 @@ def startexp(request):
                 except:
                     continue
         else:
-            html = json.dumps(['S', '0', 'No valid slot found'])
+            html = json.dumps(['S', '0', 'No valid slot found. Please book a slot before starting the experiment.'])
             return HttpResponse(html)
         if not cur_booking:
-            html = json.dumps(['S', '0', 'No valid slot found for today. Please note that you cannot start a experiment within last 5 minutes of end time'])
+            html = json.dumps(['S', '0', 'No valid slot found. Please note that you cannot start a experiment within last 5 minutes of end time.'])
             return HttpResponse(html)
 
         # test connection to SBHS device by reading the temperature value
         testconn = sbhs.Sbhs()
         res = testconn.connect(cur_booking.mid)
         if not res:
-            html = json.dumps(['S', '0', 'Failed to connect to the SBHS device'])
+            html = json.dumps(['S', '0', 'SBHS device not found. Please contact the administrator.'])
             return HttpResponse(html)
         testtemp = testconn.getTemp()
         testconn.disconnect()
         if testtemp < 1.0:
-            html = json.dumps(['S', '0', 'Failed to communicate with the SBHS device'])
+            html = json.dumps(['S', '0', 'Failed to communicate with the SBHS device.'])
             return HttpResponse(html)
 
         # set the log file name and create the necessary folders
@@ -117,19 +117,19 @@ def startexp(request):
                 os.makedirs(log_file_folder)
             except:
                 clearsession(request)
-                html = json.dumps(['S', '0', 'Failed to create user folder'])
+                html = json.dumps(['S', '0', 'Failed to create log folder on the server. Please contact the administrator.'])
                 return HttpResponse(html)
         # check if file exists and try to write to it
         if os.path.isfile(log_file_folder + log_file_name):
             clearsession(request)
-            html = json.dumps(['S', '0', 'Log file already exists'])
+            html = json.dumps(['S', '0', 'Log file already exists on the server. Please restart the client.'])
             return HttpResponse(html)
         try:
             lf = open(log_file_folder + log_file_name, "w")
             lf.close()
         except:
             clearsession(request)
-            html = json.dumps(['S', '0', 'Failed to create log file'])
+            html = json.dumps(['S', '0', 'Failed to create log file on the server. Please contact the administrator.'])
             return HttpResponse(html)
 
         # if user and slot validated and everything is ok then set the session data
@@ -140,11 +140,11 @@ def startexp(request):
         request.session['end_time'] = int(exp_end_timestamp)
         request.session['mid'] = cur_booking.mid
         request.session['log_file'] = log_file_folder + log_file_name
-        html = json.dumps(['S', '1', 'Login Successful and slot found. You have ' + str(exp_diff_ts) + ' minutes remaining', log_file_name])
+        html = json.dumps(['S', '1', 'Login successful and slot found. You have ' + str(exp_diff_ts) + ' minutes remaining.', log_file_name])
         return HttpResponse(html)
     else:
         clearsession(request)
-        return HttpResponse("Please use the SBHS Client")
+        return HttpResponse("Please use the SBHS Client.")
 
 @csrf_exempt
 def endexp(request):
@@ -159,20 +159,20 @@ def endexp(request):
 
     # delete user session data
     clearsession(request)
-    html = json.dumps(['S', '1', 'Experiment over. Thank you for using the SBHS Project'])
+    html = json.dumps(['S', '1', 'Experiment over. Thank you for using the SBHS Virtual Labs.'])
     return HttpResponse(html)
 
 @csrf_exempt
 def communicate(request):
     """ read and write data from sbhs """
     if request.method != "POST":
-        html = json.dumps(['S', '0', 'Please use the SBHS Client'])
+        html = json.dumps(['S', '0', 'Please use the SBHS Client.'])
         return HttpResponse(html)
 
     # check if user is logged in
     if not request.session.get('logged_in', None):
         clearsession(request)
-        html = json.dumps(['S', '0', 'Please login before reading data from SBHS'])
+        html = json.dumps(['S', '0', 'Please login to continue.'])
         return HttpResponse(html)
 
     # server packet received timestamp in UNIX EPOCH millisecond 
@@ -181,7 +181,7 @@ def communicate(request):
     # check if experiment end time has reached
     exp_end_timestamp = request.session.get('end_time', None)
     if not exp_end_timestamp:
-        html = json.dumps(['S', '0', 'Cannot retrive the experiment end time'])
+        html = json.dumps(['S', '0', 'Cannot retrive the slot end time from the database.'])
         return HttpResponse(html)
     if exp_end_timestamp < time.time():
         html = json.dumps(['S', '1', 'END'])
@@ -192,25 +192,25 @@ def communicate(request):
     cur_mid = request.session.get('mid', None)
     if cur_mid is None:
         clearsession(request)
-        html = json.dumps(['S', '0', 'Invalid machine id specified'])
+        html = json.dumps(['S', '0', 'Invalid machine id.'])
         return HttpResponse(html)
     res = s.connect(cur_mid)
     if not res:
-        html = json.dumps(['S', '0', 'Cannot connect to SBHS'])
+        html = json.dumps(['S', '0', 'SBHS device not found. Please contact the administrator.'])
         return HttpResponse(html)
 
     # get scilab client iteration
     scilab_client_iteration = request.POST.get('iteration', None)
-    if not scilab_client_iteration:
+    if scilab_client_iteration is None:
         s.disconnect()
-        html = json.dumps(['S', '0', 'Invalid scilab client iteration number'])
+        html = json.dumps(['S', '0', 'Invalid scilab client iteration number.'])
         return HttpResponse(html)
 
     # get scilab client timestamp
     scilab_client_timestamp = request.POST.get('timestamp', None)
     if not scilab_client_timestamp:
         s.disconnect()
-        html = json.dumps(['S', '0', 'Invalid scilab client timestamp'])
+        html = json.dumps(['S', '0', 'Invalid scilab client timestamp.'])
         return HttpResponse(html)
 
     # get scilab client variable arguments
@@ -221,19 +221,19 @@ def communicate(request):
     # set heat value
     err = False
     scilab_client_heat = request.POST.get('heat', None)
-    if scilab_client_heat:
+    if scilab_client_heat is not None:
         try:
             heat = int(scilab_client_heat)
         except:
             err = True
-            errMsg = 'Invalid heat value'
+            errMsg = 'Invalid heat value.'
         # write heat value to SBHS
         if not s.setHeat(heat):
             err = True
-            errMsg = 'Error writing heat value to SBHS'
+            errMsg = 'Error writing heat value to SBHS.'
     else:
         err = True
-        errMsg = 'Please specify heat value'
+        errMsg = 'Please specify heat value.'
     # check for error message when setting heat
     if err:
         s.disconnect()
@@ -243,20 +243,20 @@ def communicate(request):
     # set fan value
     err = False
     scilab_client_fan = request.POST.get('fan', None)
-    if scilab_client_fan:
+    if scilab_client_fan is not None:
         try:
             fan = int(scilab_client_fan)
         except:
             err = True
-            errMsg = 'Invalid fan value'
+            errMsg = 'Invalid fan value.'
         # write fan value to SBHS
         if not s.setFan(fan):
             err = True
-            errMsg = 'Error writing fan value to SBHS'
+            errMsg = 'Error writing fan value to SBHS.'
     else:
         s.disconnect()
         err = True
-        errMsg = 'Please specify fan value'
+        errMsg = 'Please specify fan value.'
     # check for error message when setting fan
     if err:
         s.disconnect()
@@ -267,7 +267,7 @@ def communicate(request):
     temperature = s.getTemp()
     if temperature < 1.0:
         s.disconnect()
-        html = json.dumps(['S', '0', 'Invalid temperature value'])
+        html = json.dumps(['S', '0', 'Invalid temperature value.'])
         return HttpResponse(html)
 
     # all SBHS read and write completed
@@ -284,7 +284,7 @@ def communicate(request):
     log_file = request.session.get('log_file', None)
     if not log_file:
         clearsession()
-        html = json.dumps(['S', '0', 'Log file not found'])
+        html = json.dumps(['S', '0', 'Log file not found on the server.'])
         return HttpResponse(html)
     try:
         lf = open(log_file, "a")
@@ -295,7 +295,7 @@ def communicate(request):
         lf.close()
     except:
         clearsession()
-        html = json.dumps(['S', '0', "Error writing to server log file"])
+        html = json.dumps(['S', '0', "Error writing to server log file."])
         return HttpResponse(html)
 
     html = json.dumps(['D', '1', server_data, scilab_client_variables])
