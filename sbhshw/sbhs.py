@@ -100,7 +100,7 @@ class Sbhs:
 
     def setHeat(self, val):
         """ Set the heat """
-        if val > MAX_HEAT:
+        if val > MAX_HEAT or val < 0:
             print 'Error: heat value cannot be more than %d' % MAX_HEAT
             return False
 
@@ -115,7 +115,7 @@ class Sbhs:
 
     def setFan(self, val):
         """ Set the fan """
-        if val > MAX_FAN:
+        if val > MAX_FAN or val < 0:
             print 'Error: fan value cannot be more than %d' % MAX_FAN
             return False
         try:
