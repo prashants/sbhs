@@ -2,9 +2,7 @@
 
 ################## SYSTEM SETTINGS ######################
 
-#base_url = 'http://vlabs.iitb.ac.in/sbhs/hardware/'
-#base_url = 'http://10.102.152.5/sb/hardware/'
-base_url = 'http://10.102.152.29/sb/hardware/'
+base_url = 'http://vlabs.iitb.ac.in/sbhs/hardware/'
 cur_log_file = ''
 scilabreadfname = 'scilabread.sce'
 scilabwritefname = 'scilabwrite.sce'
@@ -273,8 +271,8 @@ def startexperiment():
                             if content[3]:
                                 data_str += ' ' + content[3]
                             print('Data Received <= ' + data_str)
-                            # calculating and printing end time
-                            print('Time left : ' + str(int((exp_end_time - time()) / 60)) + ' minutes.')
+                            # calculating and printing end time as minutes
+                            print('Time left : ' + str(abs(int((exp_end_time - time()) / 60))) + ' minutes')
                             print('')
                             # write data to file
                             scilabreadf.write(data_str + '\n')
