@@ -140,7 +140,7 @@ def startexp(request):
         request.session['end_time'] = int(exp_end_timestamp)
         request.session['mid'] = cur_booking.mid
         request.session['log_file'] = log_file_folder + log_file_name
-        html = json.dumps(['S', '1', 'Login successful and slot found. You have ' + str(exp_diff_ts) + ' minutes remaining.', log_file_name])
+        html = json.dumps(['S', '1', 'Login successful and slot found. You have ' + str(exp_diff_ts) + ' minutes remaining.', log_file_name, exp_diff_ts])
         return HttpResponse(html)
     else:
         clearsession(request)

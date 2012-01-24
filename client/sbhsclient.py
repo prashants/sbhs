@@ -2,8 +2,9 @@
 
 ################## SYSTEM SETTINGS ######################
 
-base_url = 'http://10.102.152.5/sb/hardware/'
 #base_url = 'http://vlabs.iitb.ac.in/sbhs/hardware/'
+#base_url = 'http://10.102.152.5/sb/hardware/'
+base_url = 'http://10.102.152.29/sb/hardware/'
 cur_log_file = ''
 scilabreadfname = 'scilabread.sce'
 scilabwritefname = 'scilabwrite.sce'
@@ -32,10 +33,13 @@ from getpass import getpass
 from ConfigParser import ConfigParser
 
 ################### GLOBAL VARIABLES ####################
+
 scilabreadf = ''
 scilabwritef = ''
 logf = ''
 current_client_version = '1'
+exp_end_time = 0
+user_timeout = 10
 
 ########## CONNECTION INITIALIZATION CODE ###############
 
@@ -58,15 +62,15 @@ try:
         user_proxy_password = '' 
         user_proxy_host = '' 
         user_proxy_port = ''
-    user_timeout = config_parser.get('sbhsclient', 'timeout').strip()
-    if user_timeout:
-        try:
-            user_timeout = int(user_timeout)
-        except:
-            print('Invalid timeout specified in the "settings.txt" file. Read the reference settings given in the "settings.txt"')
-            exit(1)
-    else:
-        user_timeout = 10
+    #user_timeout = config_parser.get('sbhsclient', 'timeout').strip()
+    #if user_timeout:
+    #    try:
+    #        user_timeout = int(user_timeout)
+    #    except:
+    #        print('Invalid timeout specified in the "settings.txt" file. Read the reference settings given in the "settings.txt"')
+    #        exit(1)
+    #else:
+    #    user_timeout = 10
 except:
     print('Invalid settings in the "setttings.txt" file. Read the reference settings given in the "settings.txt"')
     exit(1)
@@ -146,7 +150,7 @@ def clientversion():
 
 def authenticate():
     """ authenticate user and setup the experiment timeout """
-    global cur_log_file, base_url, exp_time, user_rollno, user_password
+    global cur_log_file, base_url, exp_time, user_rollno, user_password, exp_end_time
     # get username if not set
     if not user_rollno:
         user_rollno = raw_input('Username/Roll Number:')
@@ -172,6 +176,8 @@ def authenticate():
         return False
     else:
         print(content[2])
+        # calculating end timestamp
+        exp_end_time = int(time()) + (60 * int(content[4]))
         cur_log_file = content[3]
 
     return True
@@ -201,7 +207,7 @@ def initlogfiles():
 
 def startexperiment():
     """ start the experiment """
-    global cur_log_file, exp_time
+    global cur_log_file, exp_time, exp_end_time
     global scilabreadf, scilabwritef, logf
 
     # open the log files
@@ -239,7 +245,7 @@ def startexperiment():
                     cur_fan = int(float(scilabwritedata[2]))
                     cur_variables = ''.join(scilabwritedata[3:]) # converting variable arguments list to string
                     cur_time = int(time() * 1000)
-                    print('data sent => iteration = %d : heat = %d : fan = %d : timestamp = %d : variables = %s' % (cur_iter, cur_heat, cur_fan, cur_time, cur_variables))
+                    print('Data Sent => iteration = %d : heat = %d : fan = %d : timestamp = %d : variables = %s' % (cur_iter, cur_heat, cur_fan, cur_time, cur_variables))
                 except:
                     print('Invalid data format in ' + scilabwritefname + '. Exiting.')
                     return False
@@ -266,7 +272,9 @@ def startexperiment():
                             # if variable arguments present in server response append it
                             if content[3]:
                                 data_str += ' ' + content[3]
-                            print('data received <= ' + data_str)
+                            print('Data Received <= ' + data_str)
+                            # calculating and printing end time
+                            print('Time left : ' + str(int((exp_end_time - time()) / 60)) + ' minutes.')
                             print('')
                             # write data to file
                             scilabreadf.write(data_str + '\n')
