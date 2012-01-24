@@ -8,7 +8,6 @@ cur_log_file = ''
 scilabreadfname = 'scilabread.sce'
 scilabwritefname = 'scilabwrite.sce'
 exp_time = ''
-max_retry = 200
 
 #########################################################
 ############ DO NOT EDIT AFTER THIS LINE ################
@@ -26,7 +25,7 @@ if python_ver[1] < 6:
     exit(1)
 
 import urllib2, urllib, cookielib, socket
-from time import time
+from time import time, sleep
 from os import path
 from json import loads
 from getpass import getpass
@@ -202,7 +201,7 @@ def initlogfiles():
 
 def startexperiment():
     """ start the experiment """
-    global cur_log_file, exp_time, max_retry
+    global cur_log_file, exp_time
     global scilabreadf, scilabwritef, logf
 
     # open the log files
@@ -251,10 +250,6 @@ def startexperiment():
             srv_data = False
             retry_counter = 0
             while not srv_data:
-                # check for maximum server connection retry attempts
-                if retry_counter > max_retry:
-                    print('Maximum connection retry reached. Please check your internet connection.')
-                    return False
                 try:
                     url_com = base_url + 'communicate'
                     postdata = urllib.urlencode({'iteration' : cur_iter, 'heat' : cur_heat, 'fan' : cur_fan, 'variables' : cur_variables, 'timestamp' : cur_time})
@@ -272,7 +267,7 @@ def startexperiment():
                             if content[3]:
                                 data_str += ' ' + content[3]
                             print('data received <= ' + data_str)
-                            print ''
+                            print('')
                             # write data to file
                             scilabreadf.write(data_str + '\n')
                             scilabreadf.flush()
@@ -291,8 +286,9 @@ def startexperiment():
                         else:
                             print('Received error message from server: ' + content[2])
                 except:
-                    print('Failed connecting to server...retrying.')
+                    print('Failed connecting to server...retry ' + str(retry_counter))
                     retry_counter = retry_counter + 1
+                    sleep(0.1)
                     srv_data = False
     except KeyboardInterrupt:
         print('\nYou have terminated the experiment. Exiting.')
