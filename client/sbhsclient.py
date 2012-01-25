@@ -6,7 +6,6 @@ base_url = 'http://vlabs.iitb.ac.in/sbhs/hardware/'
 cur_log_file = ''
 scilabreadfname = 'scilabread.sce'
 scilabwritefname = 'scilabwrite.sce'
-exp_time = ''
 
 #########################################################
 ############ DO NOT EDIT AFTER THIS LINE ################
@@ -60,15 +59,6 @@ try:
         user_proxy_password = '' 
         user_proxy_host = '' 
         user_proxy_port = ''
-    #user_timeout = config_parser.get('sbhsclient', 'timeout').strip()
-    #if user_timeout:
-    #    try:
-    #        user_timeout = int(user_timeout)
-    #    except:
-    #        print('Invalid timeout specified in the "settings.txt" file. Read the reference settings given in the "settings.txt"')
-    #        exit(1)
-    #else:
-    #    user_timeout = 10
 except:
     print('Invalid settings in the "setttings.txt" file. Read the reference settings given in the "settings.txt"')
     exit(1)
@@ -148,7 +138,7 @@ def clientversion():
 
 def authenticate():
     """ authenticate user and setup the experiment timeout """
-    global cur_log_file, base_url, exp_time, user_rollno, user_password, exp_end_time
+    global cur_log_file, base_url, user_rollno, user_password, exp_end_time
     # get username if not set
     if not user_rollno:
         user_rollno = raw_input('Username/Roll Number:')
@@ -174,9 +164,13 @@ def authenticate():
         return False
     else:
         print(content[2])
-        # calculating end timestamp
-        exp_end_time = int(time()) + (60 * int(content[4]))
         cur_log_file = content[3]
+        # calculate end timestamp, get the time remaining in minutes from the server and add to current time
+        try:
+            exp_end_time = int(time()) + (60 * int(content[4]))
+        except:
+            print('Error calculating experiment end time.')
+            exp_end_time = int(time())
 
     return True
 
@@ -205,7 +199,7 @@ def initlogfiles():
 
 def startexperiment():
     """ start the experiment """
-    global cur_log_file, exp_time, exp_end_time
+    global cur_log_file, exp_end_time
     global scilabreadf, scilabwritef, logf
 
     # open the log files
@@ -271,8 +265,14 @@ def startexperiment():
                             if content[3]:
                                 data_str += ' ' + content[3]
                             print('Data Received <= ' + data_str)
-                            # calculating and printing end time as minutes
-                            print('Time left : ' + str(abs(int((exp_end_time - time()) / 60))) + ' minutes')
+                            # calculating and printing time remaining in minutes
+                            try:
+                                time_remaining = int((exp_end_time - time()) / 60)
+                                if time_remaining < 0:
+                                    time_remaining = 0
+                            except:
+                                time_remaining = 0
+                            print('Time left : ' + str(time_remaining) + ' minutes')
                             print('')
                             # write data to file
                             scilabreadf.write(data_str + '\n')

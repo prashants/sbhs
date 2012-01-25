@@ -6,3 +6,13 @@ proxy_username =
 proxy_password = 
 proxy_host = 
 proxy_port =
+
+# DO NOT MAKE ANY UNNECESSARY CHANGES
+# SAMPLE SETTINGS ARE GIVEN BELOW
+# rollno = amit
+# password = helloworld
+# use_proxy = yes
+# proxy_username = amits
+# proxy_password = amit123
+# proxy_host = netmon.iitb.ac.in
+# proxy_port = 80
