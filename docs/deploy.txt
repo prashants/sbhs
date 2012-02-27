@@ -13,6 +13,8 @@ $sudo service apache2 restart
 4. Monitor apache log files for any error messages
 $tail -f /var/log/apache2/error.log
 
+5. Tested on Ubuntu 10.10 - x86 version
+
 SBHS device permissions :
 -------------------------
 
@@ -163,6 +165,7 @@ Run the Machine MAP generation tool
 -----------------------------------
 
 1. Run the following command to generate the machine map file
+
 $cd /var/sbhspyserver
 $sudo ./run_map.sh
 
@@ -170,9 +173,9 @@ Udpate the server URL in the SBHS Client :
 ------------------------------------------
 
 1. Edit the './client/sbhsclient.py' file and change the URL to
-the IP/URL of the actual server
+the IP/URL of the actual server. Note the '/' in the end.
 
-base_url = 'http://10.102.152.29/sbhs/'
+base_url = 'http://vlabs.iitb.ac.in/sbhs/hardware/'
 
 2. Run the client and test the connection
 $cd client
@@ -191,6 +194,16 @@ Add the below line :
 
 2. To disable the autorun in the crontab, comment the above line with a '#' symbol
 $crontab -e
+
+Add scan board scipt to execute on boot :
+-----------------------------------------
+
+1. Edit the /etc/rc.local to execute the 'run_map.sh' script on boot
+
+Add the below lines :
+
+# create the sbhs map file
+/var/sbhspyserver/run_map.sh
 
 Scilab Read / Write file formats :
 ----------------------------------
