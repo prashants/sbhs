@@ -1,0 +1,143 @@
+************************* SERVER RELATED ***************************
+
+Please provide username and password.
+- Enter a valid username and password in settings.txt file on the client side.
+
+Authentication failed. Please check your username and password.
+- Invalid credentials entered.
+
+No valid slot found. Please book a slot before starting the experiment.
+- Need to book at slot before starting the experiment.
+
+No valid slot found. Please note that you cannot start a experiment within last 5 minutes of end time.
+- Need to book a slot before starting the experiment. The user has a valid for the current day but not for the current time.
+
+SBHS device not found. Please contact the administrator.
+- Could not connect the SBHS device. Run the run_map.sh script on server again, else SBHS hardware problem.
+
+Failed to communicate with the SBHS device.
+- Could connect to SBHS device but could not read the temperature value. Run the run_map.sh script on server again, else SBHS hardware problem.
+
+Failed to create log folder on the server. Please contact the administrator.
+- Check the path of the LOG file in './sbhshw/views.py' having parameter log_file_path = "/var/sbhspylog/"
+- Also check if the permissions of the LOG folder. Try running $sudo chown www-data:www-data /var/sbhspylog -R
+- Check if disk space is available.
+- This is the LOG folder creation error.
+
+Log file already exists on the server. Please restart the client.
+- Log file with the same name exists on the server. This is not a possible case. Restart the experiment.
+
+Failed to create log file on the server. Please contact the administrator.
+- Check the path of the LOG file in './sbhshw/views.py' having parameter log_file_path = "/var/sbhspylog/"
+- Also check if the permissions of the LOG folder. Try running $sudo chown www-data:www-data /var/sbhspylog -R
+- Check if disk space is available.
+- This is the LOG file creation error.
+
+Please use the SBHS Client.
+- User directly trying to access the SBHS using URL rather then SBHS client. Use SBHS client.
+
+Please login to continue.
+- User authentication was successfull but problem storing/retriving session information. Try restarting experiment.
+- Else problem with sessions on client or server.
+
+Cannot retrive the slot end time from the database.
+- Error reading the 'end_time' column fom the sbhs database. Either invalid value or some other problem.
+- Restart the experiment.
+
+Invalid machine id.
+- Problem storing/retriving machine id information. Try restarting experiment.
+- Else problem with sessions on client or server.
+
+SBHS device not found. Please contact the administrator.
+- Could not connect to SBHS device on the server. Run the run_map.sh script on server again, else SBHS hardware problem.
+
+Invalid scilab client iteration number.
+- Problem with the scilab code on the client side. Writing invalid value for iteration number.
+
+Invalid scilab client timestamp.
+- Problem with the python code on the client side. Writing invalid value for timestamp. Try downloading the client again.
+
+Invalid heat/fan value.
+- Problem with the scilab code on the client side. Writing invalid value for heat/fan. Could not convert heat/fan to integer on server.
+
+Error writing heat/fan value to SBHS.
+- Could not write heat/fan value to SBHS device. Check the SBHS device on the server.
+
+Please specify heat/fan value.
+- Problem with the scilab code on the client side. Did not specify heat/fan value.
+
+Invalid temperature value.
+- Error reading temperature from the SBHS device. Value is less than 1.0
+
+Log file not found on the server.
+- Problem trying to write to LOG file on the server. Restart experiment or check the LOG related solutions mentioned above.
+
+Error writing to server log file
+- Problem trying to write to LOG file on the server. Restart experiment or check the LOG related solutions mentioned above.
+
+************************* CLIENT RELATED ***************************
+
+Python 3 is not currently supported. Please use Python version 2.6.x or 2.7.x'.
+- Use python version 2.7 on the client
+
+Please use Python version 2.6.x or 2.7.x'.
+- Use python version 2.7 on the client
+
+Cannot locate the "settings.txt" file. Please download the SBHS client code again.
+- Problem reading "settings.txt" on the client. Check the path of the installation and the client file.
+- Redownload and resetup everything again.
+
+Invalid settings in the "setttings.txt" file. Read the reference settings given in the "settings.txt".
+- Problem with values entered in the "settings.txt". Either in invalid format or deleted some values.
+- Redownload and resetup everything again.
+
+Data corruption error in connection check!
+- Invalid data received from server. Restart the experiment.
+- Check the network connection.
+
+Connection error ! Please check your internet connection and/or proxy settings.
+- Check the internet connection and proxy settings.
+- Check the URL of the server in the client.
+- Check whether server is accessible from the URL http://vlabs.iitb.ac.in/sbhs/hardware/checkconnection from browser.
+- Check the proxy settings.
+- Disable proxy in Internet Explorer / Terminal.
+- On linux run $export http_proxy=""
+
+SBHS client code obsolete. Please download the latest code from our website.
+- Download the updated client code from website.
+
+Connection error ! Please check your internet connection.
+- Check the internet connection.
+- Check if server is accessible.
+
+Data corruption error in authentication!
+- Invalid data received from server. Restart the experiment.
+- Check the network connection.
+
+Error calculating experiment end time.
+- Invalid End time value received from server. Restart the experiment.
+- Redownload and resetup everything again.
+
+Failed to create file: ...
+- Failed to create log files or scilabread/scilabwrite files on client.
+- Check user and folder permissions on client.
+
+Log file ... already exists.
+- Log file on client with the same name already exists. Should not happens. Restart the experiment.
+
+Failed to access files needed for experiment.
+- Failed to read/write log files or scilabread/scilabwrite files on client.
+- Check user and folder permissions on client.
+
+Invalid data format in ... Exiting.
+- Problem with the scilab code on the client side. Check the exact format for the scilabread/scilabwrite files.
+
+Error fetching data from server: ...
+- Check the error message in the above SERVER section.
+
+Experiement slot is over. Exiting.
+- Experiment timeout reached.
+
+Failed connecting to server...retry
+- Connection broken in-between the experiment. Check internet connection.
+
