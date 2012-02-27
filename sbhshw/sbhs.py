@@ -1,6 +1,6 @@
 import serial
 import os
-from time import localtime, strftime
+from time import localtime, strftime, sleep
 
 MAP_FILE = '/var/sbhspyserver/sbhshw/map_machine_ids.txt'
 LOG_FILE = '/var/sbhspylog/sbhserr.log'
@@ -144,6 +144,7 @@ class Sbhs:
         try:
             self.boardcon.flushInput()
             self._write(chr(OUTGOING_MACHINE_ID))
+            sleep(0.5) # sleep before reading machine id
             machine_id = ord(self._read(1))
             return machine_id
         except:
