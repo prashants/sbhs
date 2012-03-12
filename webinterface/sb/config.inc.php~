@@ -1,0 +1,18 @@
+<?php
+
+# Database name
+$db = "sbhs";
+
+# Internet address or hostname of database host
+$db_host = "localhost";
+
+# Database username
+$db_user = "root";
+
+# Database password
+$db_password = "cdeep123";
+
+//Site for the Url used in activation Mail
+$mailsite = "220.224.227.3";
+
+?>

@@ -1,0 +1,61 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
+<!--
+Design by Free CSS Templates
+http://www.freecsstemplates.org
+Released for free under a Creative Commons Attribution 2.5 License
+-->
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title>Single Board Heater System Lab</title>
+<meta name="Keywords" content="" />
+<meta name="Description" content="" />
+<link href="default.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="header">
+	<img src="images/iitblogo.jpg"  align="left" class="special" alt="" />
+	<h1>Single Board Heater System Lab</h1>
+	<h2>By <a href="http://www.iitb.ac.in/">Indian Institute of Technology, Bombay</a></h2>
+</div>
+	<div style="clear: both;">&nbsp;</div>
+<div id="content">
+	<div align="center"><img src="images/img4.jpg" alt="" /></div>
+	
+	<div id="colOne">
+		<div id="menu1">
+			<ul>
+				<li id="menu-01"><a href="index.php">SBHS Home</a></li>
+				<li id="menu-02"><a href="login.php">Login to SBHS</a></li>
+				<li id="menu-03"><a href="info.php">SBHS Info-Centre</a></li>
+				<li id="menu-04"><a href="downloads.php">Downloads</a></li>
+				<li id="menu-05"><a href="aboutus.php">About Us</a></li>
+				<li id="menu-06"><a href="contactus.php">Contact Us</a></li>
+			</ul>
+		</div>
+		<div class="margin-news">
+			<h2>External Links</h2>
+			<p><a href="http://www.iitb.ac.in"><strong>IIT BOMBAY</strong></a></p>
+			<p><a href="http://www.vlab.co.in"><strong>VIRTUAL LABS</strong></a></p>
+			<p><a href="http://www.spoken-tutorial.org"><strong>SPOKEN TUTORIALS</strong></a></p>
+			<p><a href="http://www.co-learn.in"><strong>CO-LEARN</strong></a></p>
+			<p><a href="http://www.cdeep.iitb.ac.in"><strong>CDEEP</strong></a></p>
+
+		</div>
+	</div>
+
+	<div id="colTwo">
+		<h2>Welcome to Single Board Heater System Lab!</h2>
+		<p>Welcome to SBHS Virtual Labs. Here you can remotely access the Single Board Heater Systems (SBHS) hosted at IIT Bombay, and perform various experiments using it.</p> 
+<p>Single Board Heater system is a lab-in-a-box setup which is primarily used for teaching/studying the theory of control systems. It can be thought of as a plant with a very small time constant (of the order of 30s). You can remotely access this system and perform experiments on it - from tests as simple as Step Tests to complicated closed loop tests!</p> 
+<p>Users are given two slots of 55 minute duration for performing the tests every day. They can also make use of vacant current slots, if any, in addition to this. The relatively small time constant of the SBHS allows the user to complete one or more experiments within the 55 minute duration.</p>
+<p>We provide you extensive documentation and spoken tutorial on the SBHS and accessing it uisng Virtual Labs. You can find the links in the downloads section. Support is given for Scilab based experiments on the SBHS. The Scilab code for the experiments are also available in the downloads section. Join us also in the SBHS discussion forum at <a href="http://www.fossee.in/moodle">http://fossee.in/moodle</a>.</p>
+		
+	</div>
+	<div style="clear: both;">&nbsp;</div>
+</div>
+<div id="footer">
+	<p>Copyright &copy; 2011 www.iitb.ac.in Designed by <a href="http://www.cdeep.iitb.ac.in"><strong>Automation Lab, CDEEP, IIT Bombay</strong></a></p>
+</div>
+</body>
+</html>

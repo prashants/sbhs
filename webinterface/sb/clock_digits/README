@@ -1,0 +1,94 @@
+################################################################################
+# Digital clock                                Version 1.0                     #
+# Copyright 2000 Frederic TYNDIUK (FTLS)       All Rights Reserved.            #
+# E-Mail: tyndiuk@ftls.org                     Script License: GPL             #
+# Created  02/28/2000                          Last Modified 02/28/2000        #
+# Scripts Archive at:                          http://www.ftls.org/php/        #
+################################################################################
+
+
+1. What is it ?
+===============
+
+	This script display a digital clock on your web page.
+
+
+2. System Requirements:
+=======================
+
+	- A web server, with PHP3 or newer.
+
+
+3. What this archive contains ?
+===============================
+
+	This archive comes with 5 files:
+	    1) COPYING:     	Copyright informations (GPL).
+	    2) README:      	This file.
+	    3) LISEZMOI:    	French doc...
+	    4) digits_clock.php:The PHP script.
+	    5) digits/*:        Sample of digits images.
+
+
+4. Installation and Configuration:
+==================================
+
+	It's a PHP script, so installation is pretty easy.
+
+	Copy 'digits_clock.php' and 'digits/*' in your good directory.
+
+    Edit 'digits_clock.php', you will have to do some configuration:                 
+
+		$IMG_DIR_URL = "./digits/";                                       
+			// En: URL Directory of digits.
+
+	Change the end of script to change look, warning, you souldn't change code.
+(under '<?php ?>').           
+
+
+5. How to run it ?
+==================
+
+	go on http://www.hostname.dom/dir/digits_clock.php and look result.
+
+
+6. Version history:
+===================
+
+	Version 1.0         02/28/2000  - Script Created.
+
+
+7. Copyright:
+=============
+
+	This software is copyright (C) 1999 Frederic TYNDIUK. It is distributed
+under the terms of the GNU General Public License (GPL). Because it is licensed
+free of charge, there is NO WARRANTY, it is provided AS IS. The author can not
+be held liable for any damage that might arise from the use of this software.
+Use it at your own risk. 
+	See the file COPYING for more details (or http://www.gnu.org/).
+
+	Warning: This script is a free software so, but you should not remove copyright...
+
+
+8. Updates ?
+============
+
+	Latest version and New Scripts can be found at:
+	
+			http://www.ftls.org/en/
+
+
+9. Contact:
+===========
+
+	Please feel free to contact me with any comments, suggestions, bug fixes
+criticism, or just a happiness messages.
+
+	If you run into any problems while trying to configure these scripts
+first read this file carefully, if you don't find any solution, send me a Mail.
+
+	E-Mail: tyndiuk@ftls.org
+	Web: http://www.ftls.org/
+
+                                                  Frederic TYNDIUK
