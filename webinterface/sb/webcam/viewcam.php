@@ -17,10 +17,10 @@ if (isset($_SESSION['rollno']) && isset($_SESSION['mid'])) {
 
 	$base_path = "/var/www/sb/webcam";
 	$machine_id = (int)$_SESSION['mid'];
-	print_r(posix_getpwuid(fileowner("/dev/video" . $machine_id))); die();
+	$group_id = filegroup("/dev/video" . $machine_id);
 
-	// check if machine id is within valid range and the video file exists
-	if ($machine_id < 1 || $machine_id > 15 || (!file_exists("/dev/video" . $machine_id))) {
+	// check if machine id is within valid range and the video file exists and the file group is 'video' = 44
+	if ($machine_id < 1 || $machine_id > 15 || (!file_exists("/dev/video" . $machine_id)) || ($group_id != 44)) {
 		echo "<img src=\"noimage.jpeg\" width=320 height=240 />";
 	} else {
 		// dump the image using streamer
