@@ -157,6 +157,7 @@ src="img/1.jpg" alt="Single board heater system" border="0"></h1>
 <div id="headline">
 <div class="underlinemenu">
 <ul>
+<li><a href="index.php">Home</a></li>
 <?
 if(isset($_SESSION['rollno']) && isset($_SESSION['mid']) )
 {
@@ -171,11 +172,8 @@ print "
 ";
 }
 ?>
-<li><a href="index.php">Home</a></li>
-<li><a href="delete_booking.php">View / Delete slot</a></li>
-<li><a href="book.php">Book Slot</a></li>
-<li><a href="contactus.php">Contact us</a></li>
 <li><a href="reg.php">Register Yourself</a></li>
+<li><a href="contactus.php">Contact us</a></li>
 </ul>
 </div>
 <br><br>

@@ -110,11 +110,26 @@ src="img/1.jpg" alt="Single board heater system" border="0"></h1>
 <div id="headline">
 <div class="underlinemenu">
 <ul>
-<li><a href="logout.php">Logout</a></li>
-<li><a href="delete_booking.php">View / Delete slot</a></li>
+<li><a href="index.php">Home</a></li>
 <li><a href="book.php">Book Slot</a></li>
-<li><a href="contactus.php">Contact us</a></li>
-<li><a href="dirbrowser.php">Download</a></li>
+<li><a href="delete_booking.php">View / Delete Slot</a></li>
+<li><a href="dirbrowser.php">Download Log Files</a></li>
+<li><a href="showvideo.php">Show Video</a></li>
+<li><a href="change_pass_logon.php">Change Password</a></li>
+<?php
+if(isset($_SESSION['rollno']))
+{
+print "
+<li><a href=logout.php>Logout</a></li>
+";
+}
+else
+{
+print "
+<li><a href=login.php>Login</a></li>
+";
+}
+?>
 </ul>
 </div>
 <br><br>
@@ -163,7 +178,7 @@ else
 
 // Open the folder
 
-$dir_handle = @opendir($path) or die("Unable to open $path");
+$dir_handle = @opendir($path) or die("<h1><center>Log files not found</center></h1>");
 
 echo "<form name='dirlist' action='download.php' method='POST'>";
 echo "<select name='filelist'>";

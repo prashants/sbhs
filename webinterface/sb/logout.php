@@ -161,7 +161,6 @@ src="img/1.jpg" alt="Single board heater system" border="0"></h1>
 <li><a href="index.php">Home</a></li>
 <li><a href="login.php">Login</a></li>
 <li><a href="reg.php">Registration</a></li>
-<li><a href="book.php">Book Slot</a></li>
 <li><a href="contactus.php">Contact us</a></li>
 </ul>
 </div>

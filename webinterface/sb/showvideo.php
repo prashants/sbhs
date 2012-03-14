@@ -1,13 +1,14 @@
 <?php
 session_start();
 ?>
+
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <!--
 
 ## Note : Removing the copyright notice is violation of the GNU Licenses ##
 // +----------------------------------------------------------------------+                
 // +----------------------------------------------------------------------+
-// | Developed by Sushanth Poojary                                        |
+// | Developed by Sushanth Poojary, Ankit Bahuguna                        |
 // +----------------------------------------------------------------------+
 // | This source file is subject to version 2.0 of the GNU - GPL license, |
 // | that is bundled with this package in the folder LICENSE, and is      |
@@ -29,11 +30,13 @@ session_start();
 // | MA 02111-1307 USA.                 				  |	
 // +----------------------------------------------------------------------+
 // | Author: Sushanth Poojary <sushanth.poojary@gmail.com>     		  |
+// | Author: Ankit Bahuguna <mailankitbahuguna@gmail.com>     		  |
 // | Copyright © 2010             					  |
 // +----------------------------------------------------------------------+
 // +----------------------------------------------------------------------+ 
 
 -->
+
 <html class=" jsEnabled" lang="en"><head>
 
 
@@ -83,61 +86,10 @@ border-bottom-color: black;
 
 </style>
 
-<script type="text/javascript">
-
-/***********************************************
-* Local Time script- © Dynamic Drive (http://www.dynamicdrive.com)
-* This notice MUST stay intact for legal use
-* Visit http://www.dynamicdrive.com/ for this script and 100s more.
-***********************************************/
-
-var weekdaystxt=["Sun", "Mon", "Tues", "Wed", "Thurs", "Fri", "Sat"]
-
-function showLocalTime(container, servermode, offsetMinutes, displayversion){
-if (!document.getElementById || !document.getElementById(container)) return
-this.container=document.getElementById(container)
-this.displayversion=displayversion
-var servertimestring=(servermode=="server-php")? '<? print date("F d, Y H:i:s", time())?>' : (servermode=="server-ssi")? '<!--#config timefmt="%B %d, %Y %H:%M:%S"--><!--#echo var="DATE_LOCAL" -->' : '<%= Now() %>'
-this.localtime=this.serverdate=new Date(servertimestring)
-this.localtime.setTime(this.serverdate.getTime()+offsetMinutes*60*1000) //add user offset to server time
-this.updateTime()
-this.updateContainer()
-}
-
-showLocalTime.prototype.updateTime=function(){
-var thisobj=this
-this.localtime.setSeconds(this.localtime.getSeconds()+1)
-setTimeout(function(){thisobj.updateTime()}, 1000) //update time every second
-}
-
-showLocalTime.prototype.updateContainer=function(){
-var thisobj=this
-if (this.displayversion=="long")
-this.container.innerHTML=this.localtime.toLocaleString()
-else{
-var hour=this.localtime.getHours()
-var minutes=this.localtime.getMinutes()
-var seconds=this.localtime.getSeconds()
-var ampm=(hour>=12)? "PM" : "AM"
-var dayofweek=weekdaystxt[this.localtime.getDay()]
-this.container.innerHTML=formatField(hour, 1)+":"+formatField(minutes)+":"+formatField(seconds)+" "+ampm+" ("+dayofweek+")"
-}
-setTimeout(function(){thisobj.updateContainer()}, 1000) //update container every second
-}
-
-function formatField(num, isHour){
-if (typeof isHour!="undefined"){ //if this is the hour field
-var hour=(num>12)? num-12 : num
-return (hour==0)? 12 : hour
-}
-return (num<=9)? "0"+num : num//if this is minute or sec field
-}
-
-</script>
 
 </head>
 
-<body onLoad='new showLocalTime("timecontainer", "server-php", 0, "short")'>
+<body>
 
 <iframe style="position: absolute; visibility: visible; 
 width: 2em; height: 2em; top: -29px; left: 0pt; border-width: 0pt;" 
@@ -164,7 +116,7 @@ src="img/1.jpg" alt="Single board heater system" border="0"></h1>
 <li><a href="dirbrowser.php">Download Log Files</a></li>
 <li><a href="showvideo.php">Show Video</a></li>
 <li><a href="change_pass_logon.php">Change Password</a></li>
-<?php 
+<?php
 if(isset($_SESSION['rollno']))
 {
 print "
@@ -177,7 +129,6 @@ print "
 <li><a href=login.php>Login</a></li>
 ";
 }
-
 ?>
 </ul>
 </div>
@@ -186,85 +137,38 @@ print "
 <div id="messageBox"></div>
 <div id="main"><div class="layout1">
 
-
 <?php
+
+// http://www.totallyphp.co.uk/scripts/directory_lister.htm
+
+/**
+
+ * Change the path to your folder.
+
+ *
+
+ * This must be the full path from the root of your
+
+ * web space. If you're not sure what it is, ask your host.
+
+ *
+
+ * Name this file index.php and place in the directory.
+
+ */
+
 include_once("config.inc.php");
- global $db, $db_host, $db_user, $db_password;
-
-$username=$_POST['uname'];
-$password=$_POST['pass'];
-
-//$username=mysql_real_escape_string($username);
-$password=md5($password);
-
- $cid = mysql_connect($db_host,$db_user,$db_password);
- if (!$cid) {
-
-  die("ERROR: " . mysql_error() . "\n");
-
- }
-mysql_select_db ("$db");
-$stuff = mysql_query("SELECT * FROM `account` WHERE rollno='".$username."' AND password='".$password."'") or die("MySQL Login Error: ".mysql_error()); 
-
-if (mysql_num_rows($stuff) > 0) { 
-
-
-$info = $_SERVER['HTTP_USER_AGENT'];
-
-$body = $info." ".$username;
-
-$info = $_SERVER['HTTP_USER_AGENT'];
-$ip = $_SERVER['REMOTE_ADDR'];
-$today = date("F j, Y, g:i a");   
-$body = "\r\n## USER ID -- ".$username." -- ## Login Date --".$today." -- ## IP --".$ip." ## System info -- ".$info;
-
-
-
-#$myFile = "log.txt";
-#$fh = fopen($myFile, 'a') or die("can't open log file");
-#fwrite($fh, $body);
-#fclose($fh);
-
-
-$row=mysql_num_rows($stuff);
-
- 
-
-while($row = mysql_fetch_array($stuff))
-  {
-  $name=$row['name'];
-  $status=$row['approved'];	
-  $mid=$row['mid'];		
-  }
-if($status == "Approved")
-{
-session_register('user');
-$_SESSION['rollno']=$username;
-$_SESSION['mid']=$mid;
-
-echo "<br><br><br><br><center><h1>Hello $name, Welcome to Single Board Heater System Lab</h1></center>";
-echo "<br><br><center><p>You can book your slot by going to the <b>Book Slot</b> section above</p></center><br><br><br><br>";
+?> 
+<?php
+if (isset($_SESSION['rollno'])) {
+	echo "<center><iframe src=\"./webcam/viewcam.php?machine=1\" frameborder=0 scrolling=no width=350px height=350px></iframe></center>";
+} else {
+	echo "<center><h3>Please login before accessing this page</h3></center>";
 }
-elseif($status == "Not approved")
-{
-echo "<br><br><br><br><center><h1>Your registration is awaiting approval from the Administrator. Please check your email for the activation link</h1></center><br><br><br><br>";
-}
-else
-{
-echo "<br><br><br><br><center><h1>Error!!! Please contact administrator</h1></center><br><br><br><br>";
-}
-}
-else 
-{ 
-echo "<br><br><br><br><center><h1>Invalid Roll No/Password please try again</h1></center><br><br><br><br>";
-}
-
 ?>
-
 </div>
 
-
-</form></div></div>
+</div></div>
 </div>
 <div id="footer">
 <ul>
@@ -275,7 +179,8 @@ href="contactus.php">Contact
 
 </li>
 </ul>
-Current Server Time:<span id="timecontainer"></span>
+
 <p id="legal">Single Board Heater System Lab - Automation Lab - <b>Chemical Dept IIT Bombay</b></div>
 
 </body></html>
+

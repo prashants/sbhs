@@ -1,3 +1,6 @@
+<?php
+session_start();
+?>
 <html>
 
 <head>
@@ -9,22 +12,37 @@
 <tr>
 <td align="center">
 <?php
-$base_path = "/var/www";
-$base_folder = "/sb/webcam/image";
-$machine_id = (int)$_GET['machine'];
-if ($machine_id < 0 || $machine_id > 15) {
-	echo "<img src=\"webcam.jpeg\" />";
-} else {
-	$image_command = "streamer -f jpeg -c /dev/video" . $machine_id . " -o " . $base_path . $base_folder . $machine_id . ".jpeg";
-	exec($image_command);
-	echo "<img src=\"" . $base_folder . $machine_id . ".jpeg\" />";
-}
+// check if user is logged in and machine id is set
+if (isset($_SESSION['rollno']) && isset($_SESSION['mid'])) {
+
+	$base_path = "/var/www/sb/webcam";
+	$machine_id = (int)$_SESSION['mid'];
+	print_r(posix_getpwuid(fileowner("/dev/video" . $machine_id))); die();
+
+	// check if machine id is within valid range and the video file exists
+	if ($machine_id < 1 || $machine_id > 15 || (!file_exists("/dev/video" . $machine_id))) {
+		echo "<img src=\"noimage.jpeg\" width=320 height=240 />";
+	} else {
+		// dump the image using streamer
+		$image_command = "streamer -f jpeg -c /dev/video" . $machine_id . " -o " . $base_path . "/image" . $machine_id . ".jpeg";
+		exec($image_command);
+		echo "<img src=\"./image" . $machine_id . ".jpeg\" />";
+	}
 ?>
+
 </td>
 </tr>
 <tr>
 <td align="center">
-<?php echo date('d-M-Y h:i:s A', time()); ?>
+
+<?php
+	echo date('d-M-Y h:i:s A', time());
+	echo " - MID : " . $machine_id;
+} else {
+	echo "Please login before accessing this page";
+}
+?>
+
 </td>
 </tr>
 </body>
