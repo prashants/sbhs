@@ -230,7 +230,7 @@ def communicate(request):
         # write heat value to SBHS
         if not s.setHeat(heat):
             err = True
-            errMsg = 'Error writing heat value to SBHS. Value exptected between 0 - 100'
+            errMsg = 'Error writing heat value to SBHS. Value exptected between 0 to 100.'
     else:
         err = True
         errMsg = 'Please specify heat value.'
@@ -252,7 +252,7 @@ def communicate(request):
         # write fan value to SBHS
         if not s.setFan(fan):
             err = True
-            errMsg = 'Error writing fan value to SBHS. Value expected between 0 - 100'
+            errMsg = 'Error writing fan value to SBHS. Value expected between 0 to 100.'
     else:
         s.disconnect()
         err = True
