@@ -45,7 +45,6 @@ def startexp(request):
             return HttpResponse(html)
 
         # authenticate user
-        password = hashlib.md5(password).hexdigest()
         user = Account.objects.filter(
             rollno = rollno,
             password = password,

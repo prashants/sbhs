@@ -2,7 +2,8 @@
 
 ################## SYSTEM SETTINGS ######################
 
-base_url = 'http://vlabs.iitb.ac.in/sbhs/hardware/'
+#base_url = 'http://vlabs.iitb.ac.in/sbhs/hardware/'
+base_url = 'http://10.102.152.29/sb/hardware/'
 cur_log_file = ''
 scilabreadfname = 'scilabread.sce'
 scilabwritefname = 'scilabwrite.sce'
@@ -23,6 +24,7 @@ if python_ver[1] < 6:
     exit(1)
 
 import urllib2, urllib, cookielib, socket
+import hashlib
 from time import time, sleep
 from os import path
 from json import loads
@@ -147,6 +149,7 @@ def authenticate():
         user_password = getpass()
     url_auth = base_url + 'startexp'
     try:
+        user_password = hashlib.md5(user_password).hexdigest()
         postdata = urllib.urlencode({'rollno' : user_rollno, 'password' : user_password})
         req = urllib2.Request(url_auth)
         res = urllib2.urlopen(req, postdata)
