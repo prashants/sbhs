@@ -124,6 +124,10 @@ SECRET_KEY = '+gz!whwja7kc9jo3z78^+@^so=(&zpp275kt@t=bd1y#nn4uuz'
 
 ROOT_URLCONF = 'sbhspyserver.urls'
 
+TEMPLATE_DIRS = (
+	'/var/sbhspyserver/templates'
+)
+
 Setup Django to point to correct project files :
 ------------------------------------------------
 
