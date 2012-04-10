@@ -2,8 +2,7 @@
 
 ################## SYSTEM SETTINGS ######################
 
-#base_url = 'http://vlabs.iitb.ac.in/sbhs/hardware/'
-base_url = 'http://10.102.152.29/sb/hardware/'
+base_url = 'http://vlabs.iitb.ac.in/sbhs/hardware/'
 cur_log_file = ''
 scilabreadfname = 'scilabread.sce'
 scilabwritefname = 'scilabwrite.sce'
