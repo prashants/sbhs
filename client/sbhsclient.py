@@ -35,7 +35,7 @@ from ConfigParser import ConfigParser
 scilabreadf = ''
 scilabwritef = ''
 logf = ''
-current_client_version = '1'
+current_client_version = '2'
 exp_end_time = 0
 user_timeout = 10
 
