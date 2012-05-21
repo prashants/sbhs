@@ -13,7 +13,7 @@ $sudo service apache2 restart
 4. Monitor apache log files for any error messages
 $tail -f /var/log/apache2/error.log
 
-5. Tested on Ubuntu 10.10 - x86 version
+5. Tested on Ubuntu 10.10 - x86 32 bit version
 
 SBHS device permissions :
 -------------------------
@@ -189,7 +189,7 @@ Add reset all board scipt to crontab :
 --------------------------------------
 
 1. Edit the current crontab to call the reset all board script every hour and
-59 minutes
+56 minutes
 $crontab -e
 
 Add the below line :

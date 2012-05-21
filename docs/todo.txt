@@ -1,44 +1,12 @@
 code :
-- remove django debug mode
 - remotely simulate plugin and plugout of sbhs
-- webcam
-- document
-- test case
-- resetting SBHS after every hour and every access.
-- diff
+- automated client side testing of all sbhs
+- document webcam
+- how to upload devendra's code
 
 others :
 - automated testing
-- two sets of docs for migration - simple and advance
 - auto update client
 
 additional features :
 - upload client log file after the experiment is over
-- documentation
-- setup script
-- change POST to debug mode
-
-completed :
-- download python 2.7 windows and put it on website rather than going
-- outside mail server
-- scilab file read / write on client simultaneously
-- show time pending
-- common client
-- fix the url issue
-- better log file name
-- timeout ..retry
-- sbhs query and mapping of machine id
-- add client receipt ts
-- check invalid data supplied by client
-- test connection to SBHS device
-- change server path to /var
-- on end of experiment call the endexp url
-- move all settings to top
-- check for windows proxy + cookies
-- get time from start / end time database column. 5 minutes before end time and stop python client also
-- check for time stamp with 00 values
-- reset all server boards in last five minutes
-- check for all parameters to be int
-- logging
-- check version of client
-- ask username/password and also save it

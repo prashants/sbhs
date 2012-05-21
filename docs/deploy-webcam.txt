@@ -1,0 +1,28 @@
+***************** DEPLOY WEBCAM FOR SBHS ********************
+
+1. Run the following command to monitor the USB bus
+
+$sudo udevadm monitor
+
+2. Plug in the webcam and check the bus path of the 'video4linux' entry
+
+3. Add a entry in the /etc/udev/rules.d/20-webcam.rules file that will assign a
+specific filename to the video device. Format of the entry is
+
+BUS=="usb", SYSFS{idVendor}=="1d0f", SYSFS{idProduct}=="2504", ID=="1-8.1", SUBSYSTEM=="video4linux", NAME="video1", MODE="666"
+
+Following fields are important :
+
+SYSFS{idVendor} - Vendor ID specific for the webcam manufacturer
+SYSFS{idProduct} - Product ID specific for the webcam make and model
+ID - the bus id on which the webcam is connected.
+NAME - the filename to assign to the webcam
+
+4. Install the following packages to grab images from the webcam
+
+$sudo apt-get install streamer
+
+5. The following path contains the php scripts for displaying images from the webcam
+/var/www/sb/webcam
+
+It runs the above streamer command to grab a image and save it to a file
