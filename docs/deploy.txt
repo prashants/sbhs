@@ -15,6 +15,9 @@ $tail -f /var/log/apache2/error.log
 
 5. Tested on Ubuntu 10.10 - x86 32 bit version
 
+6. Download the files from https://github.com/prashants/sbhs
+   Click on the zip button to download all files as zip
+
 SBHS device permissions :
 -------------------------
 
@@ -42,11 +45,14 @@ $python --version
 $sudo apt-get install libapache2-mod-wsgi python-mysqldb apache2 apache2-mpm-prefork apache2-utils
 $sudo apt-get install libapache2-mod-php5 phpmyadmin libmysqlclient16 mysql-server php5-mysql python-mysqldb
 
+(Note : For Ubunutu 12.04 you can omit the installation of libmysqlclient16 package)
+
 4. Install Django 1.2.1 [Length: 6248006 - 6.0M]
 Download django from :	https://www.djangoproject.com/download/
 			http://www.djangoproject.com/download/1.2.1/tarball/
 
 $wget http://media.djangoproject.com/releases/1.2/Django-1.2.1.tar.gz
+
 $tar zxvf Django-1.2.1.tar.gz
 $cd Django-1.2.1
 $sudo python setup.py install
@@ -55,10 +61,15 @@ $sudo python setup.py install
 $django-admin --version
 It should be more than 1.2.1
 
+(Note : For Ubuntu 12.04 the command has changed to 
+ $django-admin.py --version)
+
 Setup the SBHS Django application :
 -----------------------------------
 
 1. Copy the 'sbhspyserver' server setup to /var folder
+
+(Note : sbhspyserver folder is the zip you download from the github)
 
 2. Change ownership of the '/var/sbhspyserver/' folder to user 'www-data' and
 group 'www-data'
@@ -97,7 +108,7 @@ Copy of the file is available as './docs/etc_apache2_sites-available_default'
 Setup database :
 ----------------
 
-1. Create a database if needed from the phpmyadmin interface located at
+1. Create a database named sbhs (if not already existing) from the phpmyadmin interface located at
 http://localhost/phpmyadmin
 
 2. Import the database table structure located in the file './docs/database.sql'
@@ -106,6 +117,7 @@ Setup Django settings :
 -----------------------
 
 1. Edit the Django settings files 'settings.py' and modify following parameters if needed :
+You should find it in /var/sbhspyserver
 
 DATABASES = {
     'default': {
@@ -219,4 +231,9 @@ Iteration Heat Fan Variables
 scilabread.sce :
 
 Iteration Heat Fan Temperature TimestampClientSend TimestampServerReceive TimestampServerSend TimestampClientReceive Variables
+
+Webserver and Webcam setup :
+----------------------------
+
+See the webserver.txt and deploy-webcam.txt file to know how to set up the webserver and webcams
 
