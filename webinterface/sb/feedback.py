@@ -4,14 +4,14 @@ import sys
 from smtplib import SMTP
 import datetime
 
-smtp = SMTP('smtp-auth.iitb.ac.in', 25)
+smtp = SMTP('mail.example.com', 25)
 smtp.ehlo()
 smtp.starttls()
 smtp.ehlo()
-smtp.login('rupakrokade', '*cdeep*')
+smtp.login('username', 'password')
 
-to_addr = "rupakrokade@iitb.ac.in"
-from_addr ="rupakrokade@iitb.ac.in" 
+to_addr = "test@example.com"
+from_addr ="test@example.com"
 email=sys.argv[1]
 
 subj = "SHBS - VLABS - User Feedback"

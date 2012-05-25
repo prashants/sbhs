@@ -8,10 +8,10 @@ smtp = SMTP('smtp-auth.iitb.ac.in', 25)
 smtp.ehlo()
 smtp.starttls()
 smtp.ehlo()
-smtp.login('rupakrokade', 'rupak@rokade')
+smtp.login('username', 'password')
 
 #Use only iitb accounts to avoid phishing headers in user email.
-from_addr = "rupakrokade@iitb.ac.in"
+from_addr = "user@example.com"
 to_addr = sys.argv[1]
 roll_no=sys.argv[2]
 

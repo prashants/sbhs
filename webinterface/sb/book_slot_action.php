@@ -200,8 +200,8 @@ if(isset($_SESSION['rollno']) && isset($_SESSION['mid']) )
 	
 	
 $tdata = explode("-",$time);
-$t1 = $tdata[0];
-$t2 = $tdata[1];
+$t1 = trim($tdata[0]);
+$t2 = trim($tdata[1]);
 
 
 bookslot($rollno,$t1,$t2,$date);

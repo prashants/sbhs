@@ -70,7 +70,7 @@ Released for free under a Creative Commons Attribution 2.5 License
   		<td>1.</td>
   		<td>Step Test (Zip File)</td>
   		<td><a href="downloads/StepTest.zip" target="_blank">Download</a></td>
-		<td>Jan 23, 2012</td>
+		<td>May 23, 2012</td>
   		</tr>
 		<tr>
   		<td>2.</td>
@@ -123,6 +123,11 @@ Released for free under a Creative Commons Attribution 2.5 License
   		<td>Tutorial guide for Linux users</td>
   		<td><a href="" target="_blank"></a></td>
 		<td></td>
+  		</tr>
+                <td>9.</td>
+  		<td>Common PDF guide for Windows and Linux users</td>
+  		<td><a href="downloads/sbhs-vlabs-guide.pdf" target="_blank">Download</a></td>
+		<td>April 3, 2012</td>
   		</tr>
 </table>
 		</p>
