@@ -1,0 +1,126 @@
+Add the php code in the /var/www folder:
+---------------------------------------------
+$sudo cp -r webinterface/sb/ /var/www/
+
+Test if the webpage loads
+
+http://localhost/sb/
+
+Change the cofiguration settings:
+---------------------------------
+$sudo gedit /var/www/sb/config.inc.php
+
+Example settings
+
+# Database name
+$db = "sbhs";
+
+# Internet address or hostname of database host
+$db_host = "localhost";
+
+# Database username
+
+
+# Database password
+
+
+#Directory that hosts the Website on the Apache Server
+$directory="sb";
+
+//Site for the Url used in activation Mail
+$mailsite = "10.102.152.5";
+
+
+
+Edit the actmail.py file to configure the auto email reply feature:
+------------------------------------------------------------------
+$sudo gedit /var/www/sb/actmail.py
+
+Example settings
+
+
+import sys
+from smtplib import SMTP
+import datetime
+
+smtp = SMTP('smtp-auth.iitb.ac.in', 25)
+smtp.ehlo()
+smtp.starttls()
+smtp.ehlo()
+smtp.login('username', 'password')
+
+#Use only iitb accounts to avoid phishing headers in user email.
+from_addr = "username@iitb.ac.in"
+to_addr = sys.argv[1]
+roll_no=sys.argv[2]
+
+message_text = "Hello,\nYou need to Activate your account with the Link Below:\nhttp://10.102.152.138/sb/activate_account.php?rollno="+roll_no+"&emailid="+to_addr+"\n\nThanks for Registering!"
+
+Change the link mentioned in the message
+
+
+Edit the forpass.py file to configure the forget password feature
+-----------------------------------------------------------------
+$sudo gedit /var/www/sb/forpass.py
+
+Example settings
+
+#!/usr/bin/python
+
+import sys
+from smtplib import SMTP
+import datetime
+
+smtp = SMTP('smtp-auth.iitb.ac.in', 25)
+smtp.ehlo()
+smtp.starttls()
+smtp.ehlo()
+smtp.login('username', 'password')
+
+#Use only iitb accounts to avoid phishing headers in user email.
+from_addr = "username@iitb.ac.in"
+to_addr = sys.argv[1]
+acc_id = sys.argv[2]
+u_name = sys.argv[3]
+
+
+Edit the feedback.py file to configure the feedback mail feature
+-----------------------------------------------------------------
+$sudo gedit /var/www/sb/feedback.py
+
+Example settings
+
+import sys
+from smtplib import SMTP
+import datetime
+
+smtp = SMTP('smtp-auth.iitb.ac.in', 25)
+smtp.ehlo()
+smtp.starttls()
+smtp.ehlo()
+smtp.login('username', 'password')
+
+to_addr = "username@iitb.ac.in"
+from_addr ="username@iitb.ac.in" 
+email=sys.argv[1]
+
+
+Edit the enrolmail.py file to configure the enrol mail feature
+-----------------------------------------------------------------
+$sudo gedit /var/www/sb/enrolmail.py
+
+Example settings
+
+import sys
+from smtplib import SMTP
+import datetime
+
+smtp = SMTP('smtp-auth.iitb.ac.in', 25)
+smtp.ehlo()
+smtp.starttls()
+smtp.ehlo()
+smtp.login('username', 'password')
+
+#Use only iitb accounts to avoid phishing headers in user email.
+from_addr = "username@iitb.ac.in"
+to_addr = sys.argv[1]
